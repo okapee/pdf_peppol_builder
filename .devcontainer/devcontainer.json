@@ -1,0 +1,42 @@
+{
+	"name": "Python3docker",
+	"dockerComposeFile": "../docker-compose.yml",
+	"settings": {
+		"[python]": {
+			"editor.formatOnSave": true
+		}
+	},
+	"extensions": [
+		"ms-python.python",
+		"ms-pyright.pyright",
+		"njpwerner.autodocstring",
+		"mosapride.zenkaku",
+		"streetsidesoftware.code-spell-checker",
+		"oderwat.indent-rainbow",
+		"PKief.material-icon-theme",
+		"aaron-bond.better-comments",
+		"formulahendry.code-runner",
+		"KevinRose.vsc-python-indent",
+		"formulahendry.auto-rename-tag",
+		"bradgashler.htmltagwrap",
+		"pranaygp.vscode-css-peek",
+		"HTMLHint.vscode-htmlhint",
+		"ecmel.vscode-html-css",
+		"cstrap.flask-snippets",
+		"WyattFerguson.jinja2-snippet-kit",
+		"alexcvzz.vscode-sqlite",
+		"samuelcolvin.jinjahtml",
+		"noxiz.jinja-snippets",
+		"ms-azuretools.vscode-docker",
+		"ionutvmi.path-autocomplete",
+		"naumovs.color-highlight",
+		"esbenp.prettier-vscode",
+		"ms-vscode.live-server",
+		"kisstkondoros.vscode-gutter-preview",
+		"AnbuselvanRocky.bootstrap5-vscode",
+		"ms-python.vscode-pylance"
+	],
+	"service": "app",
+	"workspaceFolder": "/usr/src/app",
+	"shutdownAction": "stopCompose"
+}
