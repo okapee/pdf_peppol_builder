@@ -31,8 +31,12 @@ MIMETYPE = "application/xml"
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
+print(f'pathlib: {Path.cwd() / "app/static/font" }')
+
+font_path = Path.cwd() / "app/static/font/kokuri-subset.ttf"
+
 # construct the Font object
-pdfmetrics.registerFont(TTFont("kokuri", "app/static/font/kokuri-subset.ttf"))
+pdfmetrics.registerFont(TTFont("kokuri", font_path))
 
 file_path = ''
 
