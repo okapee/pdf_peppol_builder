@@ -1,0 +1,239 @@
+{% extends 'bootstrap/base.html' %} {% block styles %} {{super()}}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{{url_for('.static', filename='css/style.css')}}"
+/>
+{% endblock %} {% block navbar %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-2">
+  <a class="navbar-brand" href="#">Peppol Builder</a>
+  <!-- <div class="collapse navbar-collapse" id="navbar-header">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">ホーム</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" a href="#">リンク</a></li>
+        </ul>
+      </div> -->
+</nav>
+{% endblock %} {% block content %}
+<div class="jumbotron jumbotron-fluid text-white">
+  <div class="container p-4">
+    <h1 class="display-4">こんにちは!</h1>
+    <p class="lead">
+      このサイトはPeppolのデジタルインボイスを誰でもかんたんにつくれるようにしたものです。
+    </p>
+    <a class="btn btn-outline-primary btn-lg" href="#" role="button"
+      >JP PINTの仕様はこちら</a
+    >
+  </div>
+</div>
+
+<div class="newstopic">
+<ul>
+  <li>
+    <a href="#">
+      <span>新着</span>
+      <time datetime="2023-01-01">[ 2023.01.01 ]</time>
+      <p class="new">リリース</p>
+    </a>
+  </li>
+</ul>
+</div>
+
+<div class="container mt-2">
+  <div class="row" style="height: 1000px">
+    <div class="col-xs-12 col-lg-4 h-100" ; font-size: 20px">
+    <form id="invoice-form" method="post" onsubmit="return false;">
+      <div class="form-group">
+        <label>請求書番号：</label>
+        <input
+          id="invoiceNo"
+          type="text"
+          name="invoiceNo"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>発行日：</label>
+        <input
+          id="issueDate"
+          type="text"
+          name="issueDate"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>取引日：</label>
+        <input id="dealDate" type="text" name="dealDate" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>登録番号：</label>
+        <input
+          id="registerNo"
+          type="text"
+          name="registerNo"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>請求元：</label>
+        <input id="issuer" type="text" name="issuer" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>請求元住所：</label>
+        <input id="issuerAddress" type="text" name="issuerAddress" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>請求元TEL：</label>
+        <input id="issuerTel" type="text" name="issuerTel" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>登録状況：</label>
+        <input
+          id="registerStatus"
+          type="text"
+          name="registerStatus"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>登録社名/氏名：</label>
+        <input
+          id="registerCo"
+          type="text"
+          name="registerCo"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>支払期日：</label>
+        <input id="dueDate" type="text" name="dueDate" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>請求額：</label>
+        <input id="amount" type="text" name="amount" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>支払条件等：</label>
+        <input id="payCond" type="text" name="payCond" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>振込先銀行名：</label>
+        <input id="bank" type="text" name="bank" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>支店名：</label>
+        <input id="bBranch" type="text" name="bBranch" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>口座種別：</label>
+        <input
+          id="accountType"
+          type="text"
+          name="accountType"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>口座番号：</label>
+        <input
+          id="accountNo"
+          type="text"
+          name="accountNo"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>口座名義：</label>
+        <input
+          id="accountName"
+          type="text"
+          name="accountName"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label>請求先番号：</label>
+        <input id="issuerNo" type="text" name="issuerNo" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>請求先：</label>
+        <input
+          id="issuerName"
+          type="text"
+          name="issuerName"
+          class="form-control"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary mt-2">生成</button>
+      <input
+        type="button"
+        id="reset"
+        class="btn btn-primary mt-2"
+        value="リセット"
+        onclick="reset()"
+      /><br />
+    </form>
+    JP PINTフォーマットでのXMLファイルのダウンロードは<a
+      src="http://www.google.com"
+      class="mt-4 pt-4"
+      >こちら</a
+    >
+  </div>
+  <div id="result" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 h-100 tensen">
+    ここに生成されたPDFが表示されます。
+  </div>
+</div>
+
+{% block scripts %} {{ super() }}
+<script type="text/javascript">
+  $('#invoice-form').on('submit', function (e) {
+      e.preventDefault();
+      var form_data = $('#invoice-form');
+      var serialized_data = form_data.serializeArray();
+      var send_data = JSON.stringify(serialized_data);
+      console.log(`send_data: ${typeof(form_data)}`);
+      $.ajax({
+          type: "POST",
+          url: "/call_from_ajax",
+          data: {
+            fileSpecNo: Math.random().toString(32).substring(2),
+            invoiceNo: $('#invoiceNo').val(),
+            issueDate: $('#issueDate').val(),
+            issuerName: $('#issuerName').val(),
+            issuerAddress: $('#issuerAddress').val(),
+            issuerTel: $('#issuerTel').val(),
+            amount: $('#amount').val(),
+            dueDate: $('#dueDate').val(),
+            registerCo: $('#registerCo').val(),
+            dealDate: $('#dealDate').val(),
+            registerNo: $('#registerNo').val(),
+            issuer: $('#issuer').val(),
+            bank: $('#bank').val(),
+            bBranch: $('#bBranch').val(),
+            accountType: $('#accountType').val(),
+            accountNo: $('#accountNo').val(),
+            accountName: $('#accountName').val(),
+          },
+      })
+          .done(function (received_data) {
+              // 戻ってきたのはJSON（文字列）
+              var dict = JSON.parse(received_data);
+              var encoded_string = dict["encoded_string"];
+              console.log("encoded_string: " + encoded_string);
+
+              // PDFを表示
+              $("#result").removeClass("tensen");
+              $("#result").addClass("showpdf");
+              $("#result").html(
+                  '<embed type="application/pdf" width="100%" src="data:application/pdf;base64,' +
+                  encoded_string +
+                  '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+          })
+          .fail(function () {
+              console.log("失敗");
+          });
+  });
+</script>
+{% endblock %} {% endblock %}
