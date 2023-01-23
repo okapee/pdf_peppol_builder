@@ -31,14 +31,14 @@ MIMETYPE = "application/xml"
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
-print(f'pathlib: {Path.cwd() / "app/static/font" }')
+print(f'pathlib: {Path.cwd() / "static/font" }')
 
-font_path = Path.cwd() / "app/static/font/kokuri-subset.ttf"
+font_path = Path.cwd() / "static/font/kokuri-subset.ttf"
 
 # construct the Font object
 pdfmetrics.registerFont(TTFont("kokuri", font_path))
 
-file_path = ''
+file_path = ""
 
 # font_path = Path(__file__).parent / "static" / "font" / "kokuri-subset.ttf"
 # custom_font = TrueTypeFont.true_type_font_from_file(font_path)
@@ -90,7 +90,9 @@ def callfromajax():
             encoded_string = ""
             filename = f'output_{request.form["fileSpecNo"]}.pdf'
             # filename = 'sample.pdf'
-            file_path = Path(__file__).parent / "tmp" / filename
+            # file_path = Path.cwd() / "tmp" / filename
+            file_path = f"./tmp/{filename}"
+            app.logger.warning(f"file_path: {file_path}")
             # file_path = f'app/tmp/{filename}'
             app.logger.warning(f"filename: {filename}")
             # app.logger.warning(f"filepath: {file_path}")
@@ -100,50 +102,54 @@ def callfromajax():
 
             app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
 
+            # output_path = Path.cwd() / "tmp" / filename
+
             # A4の新規PDFファイルを作成
-            page = canvas.Canvas(f'app/tmp/{filename}', pagesize=portrait(A4))
-            app.logger.warning(f'page: {page}')
+            page = canvas.Canvas(f"tmp/{filename}", pagesize=portrait(A4))
+            app.logger.warning(f"page: {page}")
 
             # フォントの設定(第1引数：フォント、第2引数：サイズ)
             page.setFont("kokuri", 18)
 
+            page.drawRightString(20 * cm, 28 * cm, f"発行日:{issueDate}")
+            page.drawRightString(20 * cm, 27 * cm, f"請求書番号:{invoiceNo}")
+            page.drawString(1 * cm, 23 * cm, f"{issuerName} 御中")
+            page.drawString(1 * cm, 22 * cm, f'ご請求金額:{request.form["amount"]} 円')
+            page.drawString(1 * cm, 21 * cm, f'お支払期限:{request.form["dueDate"]}')
+            page.drawRightString(20 * cm, 23 * cm, f'{request.form["registerCo"]}')
+            page.drawRightString(20 * cm, 22 * cm, f'{request.form["issuerAddress"]}')
+            page.drawRightString(20 * cm, 21 * cm, f'{request.form["issuerTel"]}')
 
-            page.drawRightString(20*cm, 28*cm, f'発行日:{issueDate}')
-            page.drawRightString(20*cm, 27*cm, f'請求書番号:{invoiceNo}')
-            page.drawString(1*cm, 23*cm, f'{issuerName} 御中')
-            page.drawString(1*cm, 22*cm, f'ご請求金額:{request.form["amount"]} 円')
-            page.drawString(1*cm, 21*cm, f'お支払期限:{request.form["dueDate"]}')
-            page.drawRightString(20*cm, 23*cm, f'{request.form["registerCo"]}')
-            page.drawRightString(20*cm, 22*cm, f'{request.form["issuerAddress"]}')
-            page.drawRightString(20*cm, 21*cm, f'{request.form["issuerTel"]}')
-            
             # 指定座標が左端となるように文字を挿入 Ａ４サイズは、縦２９．７cm、横２１．０cm
             # フォントの設定(第1引数：フォント、第2引数：サイズ)
             page.setFont("kokuri", 25)
-            page.drawString(10*cm, 25*cm, "請求書")
+            page.drawString(10 * cm, 25 * cm, "請求書")
 
             # 明細
             # This Block Consist of Costumer Details
             # roundRect 1&2: 左下隅の座標、 3: 幅、 4: 高さ、 5: 丸み
-            page.roundRect(40,80,520,100,5,stroke=1,fill=0)
-            page.setFont("kokuri",15)
+            page.roundRect(40, 80, 520, 100, 5, stroke=1, fill=0)
+            page.setFont("kokuri", 15)
 
             # This Block Consist of Item Description
-            page.roundRect(40,200,520,300,5,stroke=1,fill=0)
-            page.line(40,470,560, 470)
-            page.drawCentredString(65,480,"No.")
-            page.drawCentredString(190,480,"品目")
-            page.drawCentredString(350,480,"単価")
-            page.drawCentredString(430,480,"数量")
-            page.drawCentredString(510,480,"税抜合計")
+            page.roundRect(40, 200, 520, 300, 5, stroke=1, fill=0)
+            page.line(40, 470, 560, 470)
+            page.drawCentredString(65, 480, "No.")
+            page.drawCentredString(190, 480, "品目")
+            page.drawCentredString(350, 480, "単価")
+            page.drawCentredString(430, 480, "数量")
+            page.drawCentredString(510, 480, "税抜合計")
             #  Drawing table for Item Description
-            page.line(90,200,90,500)
-            page.line(300,200,300,500)
-            page.line(400,200,400,500)
-            page.line(460,200,460,500)
-       
-            page.drawString(50,150,f'振込先: {request.form["bank"]}銀行  {request.form["bBranch"]}支店  {request.form["accountType"]}  {request.form["accountNo"]}  {request.form["accountName"]}')
+            page.line(90, 200, 90, 500)
+            page.line(300, 200, 300, 500)
+            page.line(400, 200, 400, 500)
+            page.line(460, 200, 460, 500)
 
+            page.drawString(
+                50,
+                150,
+                f'振込先: {request.form["bank"]}銀行  {request.form["bBranch"]}支店  {request.form["accountType"]}  {request.form["accountNo"]}  {request.form["accountName"]}',
+            )
 
             # PDFファイルとして保存
             page.save()
@@ -151,7 +157,7 @@ def callfromajax():
             pass
 
         print(f"post_filename: {filename}")
-        with open(f'app/tmp/{filename}', "rb") as pdf_file:
+        with open(f"tmp/{filename}", "rb") as pdf_file:
             encoded_string = base64.b64encode(pdf_file.read())
 
         dict = {
