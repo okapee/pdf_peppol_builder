@@ -22,5 +22,5 @@ python-dotenv
 SQLAlchemy
 Werkzeug
 WTForms
-borb
+reportlab
 gunicorn
