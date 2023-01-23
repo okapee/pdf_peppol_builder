@@ -105,7 +105,7 @@ def callfromajax():
             # output_path = Path.cwd() / "tmp" / filename
 
             # A4の新規PDFファイルを作成
-            page = canvas.Canvas(f"tmp/{filename}", pagesize=portrait(A4))
+            page = canvas.Canvas(f"/tmp/{filename}", pagesize=portrait(A4))
             app.logger.warning(f"page: {page}")
 
             # フォントの設定(第1引数：フォント、第2引数：サイズ)
@@ -157,7 +157,7 @@ def callfromajax():
             pass
 
         print(f"post_filename: {filename}")
-        with open(f"tmp/{filename}", "rb") as pdf_file:
+        with open(f"/tmp/{filename}", "rb") as pdf_file:
             encoded_string = base64.b64encode(pdf_file.read())
 
         dict = {
