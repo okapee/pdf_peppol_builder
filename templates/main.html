@@ -1,192 +1,231 @@
-{% extends 'bootstrap/base.html' %} {% block styles %} {{super()}}
+{% extends 'base.html' %} {% block styles %} {{super()}}
 <link
   rel="stylesheet"
   type="text/css"
   href="{{url_for('.static', filename='css/style.css')}}"
 />
 {% endblock %} {% block navbar %}
-<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark p-2">
-  <a class="navbar-brand" href="#">Peppol Builder</a>
-  <!-- <div class="collapse navbar-collapse" id="navbar-header">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">ホーム</a>
-          </li>
-          <li class="nav-item"><a class="nav-link" a href="#">リンク</a></li>
-        </ul>
-      </div> -->
-</nav>
-{% endblock %} {% block content %}
-<div class="jumbotron jumbotron-fluid text-white">
-  <div class="container p-4">
-    <h1 class="display-4">こんにちは!</h1>
-    <p class="lead">
-      このサイトはPeppolのデジタルインボイスを誰でもかんたんにつくれるようにしたものです。
-    </p>
-    <a class="btn btn-outline-primary btn-lg" href="#" role="button"
-      >JP PINTの仕様はこちら</a
-    >
-  </div>
-</div>
-
-<div class="newstopic">
-<ul>
-  <li>
-    <a href="#">
-      <span>新着</span>
-      <time datetime="2023-01-01">[ 2023.01.01 ]</time>
-      <p class="new">リリース</p>
-    </a>
-  </li>
-</ul>
-</div>
-
-<div class="container mt-2">
-  <div class="row" style="height: 1000px">
-    <div class="col-xs-12 col-lg-4 h-100" ; font-size: 20px">
-    <form id="invoice-form" method="post" onsubmit="return false;">
-      <div class="form-group">
-        <label>請求書番号：</label>
-        <input
-          id="invoiceNo"
-          type="text"
-          name="invoiceNo"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>発行日：</label>
-        <input
-          id="issueDate"
-          type="text"
-          name="issueDate"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>取引日：</label>
-        <input id="dealDate" type="text" name="dealDate" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>登録番号：</label>
-        <input
-          id="registerNo"
-          type="text"
-          name="registerNo"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>請求元：</label>
-        <input id="issuer" type="text" name="issuer" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>請求元住所：</label>
-        <input id="issuerAddress" type="text" name="issuerAddress" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>請求元TEL：</label>
-        <input id="issuerTel" type="text" name="issuerTel" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>登録状況：</label>
-        <input
-          id="registerStatus"
-          type="text"
-          name="registerStatus"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>登録社名/氏名：</label>
-        <input
-          id="registerCo"
-          type="text"
-          name="registerCo"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>支払期日：</label>
-        <input id="dueDate" type="text" name="dueDate" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>請求額：</label>
-        <input id="amount" type="text" name="amount" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>支払条件等：</label>
-        <input id="payCond" type="text" name="payCond" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>振込先銀行名：</label>
-        <input id="bank" type="text" name="bank" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>支店名：</label>
-        <input id="bBranch" type="text" name="bBranch" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>口座種別：</label>
-        <input
-          id="accountType"
-          type="text"
-          name="accountType"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>口座番号：</label>
-        <input
-          id="accountNo"
-          type="text"
-          name="accountNo"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>口座名義：</label>
-        <input
-          id="accountName"
-          type="text"
-          name="accountName"
-          class="form-control"
-        />
-      </div>
-      <div class="form-group">
-        <label>請求先番号：</label>
-        <input id="issuerNo" type="text" name="issuerNo" class="form-control" />
-      </div>
-      <div class="form-group">
-        <label>請求先：</label>
-        <input
-          id="issuerName"
-          type="text"
-          name="issuerName"
-          class="form-control"
-        />
-      </div>
-      <button type="submit" class="btn btn-primary mt-2">生成</button>
-      <input
+<div class="container">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Peppol&PDF Builder</a>
+      <button
+        class="navbar-toggler"
         type="button"
-        id="reset"
-        class="btn btn-primary mt-2"
-        value="リセット"
-        onclick="reset()"
-      /><br />
-    </form>
-    JP PINTフォーマットでのXMLファイルのダウンロードは<a
-      src="http://www.google.com"
-      class="mt-4 pt-4"
-      >こちら</a
-    >
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li>
+        </ul>
+        <form class="d-flex">
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+  {% endblock %} {% block content %}
+  <div class="jumbotron p-4 text-white">
+    <div class="container">
+      <h1 class="display-3">こんにちは!</h1>
+      <p class="lead h2 pb-2">
+        このサイトはPeppolのデジタルインボイスを誰でもかんたんにつくれるようにしたものです。
+      </p>
+      <a class="btn btn-outline-primary btn-lg" href="#" role="button"
+        >JP PINTの仕様はこちら</a
+      >
+    </div>
   </div>
-  <div id="result" class="col-xs-12 col-sm-12 col-md-12 col-lg-8 h-100 tensen">
-    ここに生成されたPDFが表示されます。
+
+  <div class="alert alert-success m-4" role="alert">
+    <h3 class="alert=heading">What's New</h3>
+    <p><i class="bi bi-info-circle-fill"></i> 2023.1.26 デザインを微修正</p>
+    <hr />
+    <p><i class="bi bi-info-circle-fill"></i> 2023.1.1 リリース</p>
+  </div>
+
+  <div class="row m-2">
+    <div class="col-lg-5 h-100">
+      <form id="invoice-form" method="post" onsubmit="return false;">
+        <div class="form-group mb-3">
+          <label for="invoiceNo" class="form-label">請求書番号：</label>
+          <input
+            id="invoiceNo"
+            type="text"
+            name="invoiceNo"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issueDate" class="form-label">発行日：</label>
+          <input
+            id="issueDate"
+            type="text"
+            name="issueDate"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="dealDate" class="form-label">取引日：</label>
+          <input
+            id="dealDate"
+            type="text"
+            name="dealDate"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="registerNo" class="form-label">登録番号：</label>
+          <input
+            id="registerNo"
+            type="text"
+            name="registerNo"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issuer" class="form-label">請求元：</label>
+          <input id="issuer" type="text" name="issuer" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issuerAddress" class="form-label">請求元住所：</label>
+          <input
+            id="issuerAddress"
+            type="text"
+            name="issuerAddress"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issuerTel" class="form-label">請求元TEL：</label>
+          <input
+            id="issuerTel"
+            type="text"
+            name="issuerTel"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="registerStatus" class="form-label">登録状況：</label>
+          <input
+            id="registerStatus"
+            type="text"
+            name="registerStatus"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="registerCo" class="form-label">登録社名/氏名：</label>
+          <input
+            id="registerCo"
+            type="text"
+            name="registerCo"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="dueDate" class="form-label">支払期日：</label>
+          <input id="dueDate" type="text" name="dueDate" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="amount" class="form-label">請求額：</label>
+          <input id="amount" type="text" name="amount" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="payCond" class="form-label">支払条件等：</label>
+          <input id="payCond" type="text" name="payCond" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="bank" class="form-label">振込先銀行名：</label>
+          <input id="bank" type="text" name="bank" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="exampleInputEmail1" class="bBranch">支店名：</label>
+          <input id="bBranch" type="text" name="bBranch" class="form-control" />
+        </div>
+        <div class="form-group mb-3">
+          <label for="accountType" class="form-label">口座種別：</label>
+          <input
+            id="accountType"
+            type="text"
+            name="accountType"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="accountNo" class="form-label">口座番号：</label>
+          <input
+            id="accountNo"
+            type="text"
+            name="accountNo"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="accountName" class="form-label">口座名義：</label>
+          <input
+            id="accountName"
+            type="text"
+            name="accountName"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issuerNo" class="form-label">請求先番号：</label>
+          <input
+            id="issuerNo"
+            type="text"
+            name="issuerNo"
+            class="form-control"
+          />
+        </div>
+        <div class="form-group mb-3">
+          <label for="issuerName" class="form-label">請求先：</label>
+          <input
+            id="issuerName"
+            type="text"
+            name="issuerName"
+            class="form-control"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary mt-2">生成</button>
+        <input
+          type="button"
+          id="reset"
+          class="btn btn-primary mt-2"
+          value="リセット"
+          onclick="reset()"
+        /><br />
+      </form>
+      JP PINTフォーマットでのXMLファイルのダウンロードは<a
+        src="http://www.google.com"
+        class="mt-4 pt-4"
+        >こちら</a
+      >
+    </div>
+    <div id="result" class="col-lg-7 border border-2">
+      ここに生成されたPDFが表示されます。
+    </div>
   </div>
 </div>
 
-{% block scripts %} {{ super() }}
 <script type="text/javascript">
   $('#invoice-form').on('submit', function (e) {
       e.preventDefault();
@@ -224,10 +263,9 @@
               console.log("encoded_string: " + encoded_string);
 
               // PDFを表示
-              $("#result").removeClass("tensen");
-              $("#result").addClass("showpdf");
+              $("#result").removeClass("border border-2");
               $("#result").html(
-                  '<embed type="application/pdf" width="100%" src="data:application/pdf;base64,' +
+                  '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
                   encoded_string +
                   '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
           })
@@ -236,4 +274,4 @@
           });
   });
 </script>
-{% endblock %} {% endblock %}
+{% endblock %}

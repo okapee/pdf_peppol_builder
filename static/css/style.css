@@ -2,63 +2,9 @@ body {
     margin: 2px;
 }
 
-embed {
-    width: 100%;
-    height: 100%;
-}
-
 .jumbotron {
-    background-image: url("https://picsum.photos/600/400");
+    background: url("https://placedog.net/1200/800?id=49") center no-repeat;
     background-size: cover;
-    background-position: center 60%;
-}
-
-.top-image {
-    color: "white";
-}
-
-.tensen {
-    border: dotted 2px rgb(100, 100, 100);
-    text-align: center;
-    padding: 20% 0;
-}
-
-.showpdf {
-    height: 100%;
-}
-
-
-li {
-    border-bottom: 1px dotted #000;
-    list-style: none;
-    padding: 10px;
-    width: 800px;
-}
-
-a {
-    color: #000;
-    text-decoration: none;
-}
-
-span {
-    background-color: #2388b8;
-    border-radius: 3px;
-    color: #fff;
-    display: inline-block;
-    margin-right: 20px;
-    padding: 5px;
-}
-
-time {
-    display: inline-block;
-    font-weight: bold;
-    margin-right: 40px;
-}
-
-p {
-    color: #1c448d;
-    display: inline-block;
-    text-decoration: underline;
 }
 
 .new::after {
