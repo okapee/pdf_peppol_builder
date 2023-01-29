@@ -98,7 +98,7 @@ def callfromajax():
             # app.logger.warning(f"filepath: {file_path}")
             invoiceNo = request.form["invoiceNo"]
             issueDate = request.form["issueDate"]
-            issuerName = request.form["issuerName"]
+            issuer = request.form["issuer"]
 
             app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
 
@@ -113,10 +113,9 @@ def callfromajax():
 
             page.drawRightString(20 * cm, 28 * cm, f"発行日:{issueDate}")
             page.drawRightString(20 * cm, 27 * cm, f"請求書番号:{invoiceNo}")
-            page.drawString(1 * cm, 23 * cm, f"{issuerName} 御中")
+            page.drawString(1 * cm, 23 * cm, f"{issuer} 御中")
             page.drawString(1 * cm, 22 * cm, f'ご請求金額:{request.form["amount"]} 円')
             page.drawString(1 * cm, 21 * cm, f'お支払期限:{request.form["dueDate"]}')
-            page.drawRightString(20 * cm, 23 * cm, f'{request.form["registerCo"]}')
             page.drawRightString(20 * cm, 22 * cm, f'{request.form["issuerAddress"]}')
             page.drawRightString(20 * cm, 21 * cm, f'{request.form["issuerTel"]}')
 

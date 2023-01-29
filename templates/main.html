@@ -46,16 +46,23 @@
     <div class="container">
       <h1 class="display-3">こんにちは!</h1>
       <p class="lead h2 pb-2">
-        このサイトはPeppolのデジタルインボイスとPDF生成を誰でもかんたんにつくれるようにしたものです。
+        このサイトはPeppolのデジタルインボイスと請求書PDFを誰でもかんたんにつくれるようにしたものです。
       </p>
-      <a class="btn btn-outline-primary btn-lg" href="#" role="button"
+      <a
+        class="btn btn-outline-primary btn-lg"
+        href="https://docs.peppol.eu/poac/jp/"
+        role="button"
         >JP PINTの仕様はこちら</a
       >
     </div>
   </div>
 
-  <div class="alert alert-success m-4" role="alert">
+  <div class="alert alert-success m-3" role="alert">
     <h3 class="alert=heading">What's New</h3>
+    <p>
+      <i class="bi bi-info-circle-fill"></i> 2023.1.29 フォームレイアウトを修正
+    </p>
+    <hr />
     <p><i class="bi bi-info-circle-fill"></i> 2023.1.26 デザインを微修正</p>
     <hr />
     <p><i class="bi bi-info-circle-fill"></i> 2023.1.1 リリース</p>
@@ -64,156 +71,169 @@
   <div class="row m-2">
     <div class="col-lg-5 h-100">
       <form id="invoice-form" method="post" onsubmit="return false;">
-        <div class="form-group mb-3">
-          <label for="invoiceNo" class="form-label">請求書番号：</label>
-          <div class="row">
-            <div class="col-1 form-start-text">T-</div>
+        <div class="border rounded p-2 mb-2">
+          <div class="lead mark mb-2">鏡(ヘッダー)</div>
+          <div class="form-group mb-3">
+            <label for="invoiceNo" class="form-label">請求書番号：</label>
             <input
               id="invoiceNo"
-              class="col-10"
-              type="number"
+              type="text"
               name="invoiceNo"
               class="form-control"
             />
           </div>
-          <div class="form-text">Tを除く数字13桁で入力してください。</div>
+          <div class="form-group mb-3">
+            <label for="issueDate" class="form-label">発行日：</label>
+            <input
+              id="issueDate"
+              type="text"
+              name="issueDate"
+              class="form-control datepicker"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="dealDate" class="form-label">取引日：</label>
+            <input
+              id="dealDate"
+              type="text"
+              name="dealDate"
+              class="form-control datepicker"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="dueDate" class="form-label">支払期日：</label>
+            <input
+              id="dueDate"
+              type="text"
+              name="dueDate"
+              class="form-control datepicker"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="amount" class="form-label">請求額：</label>
+            <input
+              id="amount"
+              type="number"
+              name="amount"
+              class="form-control"
+            />
+          </div>
         </div>
-        <div class="form-group mb-3">
-          <label for="issueDate" class="form-label">発行日：</label>
-          <input
-            id="issueDate"
-            type="text"
-            name="issueDate"
-            class="form-control datepicker"
-          />
+
+        <div class="border rounded p-2 mb-2">
+          <div class="lead mark mb-2">売り手(債権者)情報</div>
+          <div class="form-group">
+            <label for="registerNo" class="form-label"
+              >適格請求書発行事業者登録番号：</label
+            >
+            <div class="row">
+              <div class="col-1 form-start-text">T-</div>
+              <input
+                id="registerNo"
+                class="col-10"
+                type="number"
+                name="registerNo"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
+
+          <div class="form-group mb-3">
+            <label for="issuer" class="form-label">請求元会社名：</label>
+            <input id="issuer" type="text" name="issuer" class="form-control" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="issuerAddress" class="form-label">請求元住所：</label>
+            <input
+              id="issuerAddress"
+              type="text"
+              name="issuerAddress"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="issuerTel" class="form-label">請求元電話番号：</label>
+            <input
+              id="issuerTel"
+              type="number"
+              name="issuerTel"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="bank" class="form-label">振込先銀行名：</label>
+            <input id="bank" type="text" name="bank" class="form-control" />
+          </div>
+          <div class="form-group mb-3">
+            <label for="exampleInputEmail1" class="bBranch">支店名：</label>
+            <input
+              id="bBranch"
+              type="text"
+              name="bBranch"
+              class="form-control"
+            />
+          </div>
+          <div id="accountType" class="form-group mb-2">
+            <label>口座種別：</label>
+            <br />
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="accountType"
+                value="normal_deposit"
+              />
+              <label class="form-check-label" for="inlineRadio1">普通</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="accountType"
+                value="current_deposit"
+              />
+              <label class="form-check-label" for="inlineRadio2">当座</label>
+            </div>
+          </div>
+          <div class="form-group mb-3">
+            <label for="accountNo" class="form-label">口座番号：</label>
+            <input
+              id="accountNo"
+              type="number"
+              name="accountNo"
+              class="form-control"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="accountName" class="form-label">口座名義：</label>
+            <input
+              id="accountName"
+              type="text"
+              name="accountName"
+              class="form-control"
+            />
+          </div>
         </div>
-        <div class="form-group mb-3">
-          <label for="dealDate" class="form-label">取引日：</label>
-          <input
-            id="dealDate"
-            type="text"
-            name="dealDate"
-            class="form-control datepicker"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="registerNo" class="form-label">登録番号：</label>
-          <input
-            id="registerNo"
-            type="text"
-            name="registerNo"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="issuer" class="form-label">請求元：</label>
-          <input id="issuer" type="text" name="issuer" class="form-control" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="issuerAddress" class="form-label">請求元住所：</label>
-          <input
-            id="issuerAddress"
-            type="text"
-            name="issuerAddress"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="issuerTel" class="form-label">請求元TEL：</label>
-          <input
-            id="issuerTel"
-            type="text"
-            name="issuerTel"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="registerStatus" class="form-label">登録状況：</label>
-          <input
-            id="registerStatus"
-            type="text"
-            name="registerStatus"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="registerCo" class="form-label">登録社名/氏名：</label>
-          <input
-            id="registerCo"
-            type="text"
-            name="registerCo"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="dueDate" class="form-label">支払期日：</label>
-          <input
-            id="dueDate"
-            type="text"
-            name="dueDate"
-            class="form-control datepicker"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="amount" class="form-label">請求額：</label>
-          <input id="amount" type="text" name="amount" class="form-control" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="payCond" class="form-label">支払条件等：</label>
-          <input id="payCond" type="text" name="payCond" class="form-control" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="bank" class="form-label">振込先銀行名：</label>
-          <input id="bank" type="text" name="bank" class="form-control" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="exampleInputEmail1" class="bBranch">支店名：</label>
-          <input id="bBranch" type="text" name="bBranch" class="form-control" />
-        </div>
-        <div class="form-group mb-3">
-          <label for="accountType" class="form-label">口座種別：</label>
-          <input
-            id="accountType"
-            type="text"
-            name="accountType"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="accountNo" class="form-label">口座番号：</label>
-          <input
-            id="accountNo"
-            type="text"
-            name="accountNo"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="accountName" class="form-label">口座名義：</label>
-          <input
-            id="accountName"
-            type="text"
-            name="accountName"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="issuerNo" class="form-label">請求先番号：</label>
-          <input
-            id="issuerNo"
-            type="text"
-            name="issuerNo"
-            class="form-control"
-          />
-        </div>
-        <div class="form-group mb-3">
-          <label for="issuerName" class="form-label">請求先：</label>
-          <input
-            id="issuerName"
-            type="text"
-            name="issuerName"
-            class="form-control"
-          />
+        <div class="border rounded p-2 mb-2">
+          <div class="lead mark mb-2">書い手(債務者)情報</div>
+
+          <div class="form-group">
+            <label for="buyerNo" class="form-label"
+              >適格請求書発行事業者登録番号：</label
+            >
+            <div class="row">
+              <div class="col-1 form-start-text">T-</div>
+              <input
+                id="buyerNo"
+                class="col-10"
+                type="number"
+                name="buyerNo"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
         </div>
         <button type="submit" class="btn btn-primary mt-2">生成</button>
         <input
@@ -238,11 +258,14 @@
 
 <script type="text/javascript">
   $('#invoice-form').on('submit', function (e) {
+      console.log('submit発火');
       e.preventDefault();
       var form_data = $('#invoice-form');
+      console.dir(`form_data: ${form_data}`);
+      console.log(`invoiceNo: ${$('#invoiceNo').val()}, issueDate: ${$('#issueDate').val()}, issuerName: ${$('#issuerName').val()}`);
       var serialized_data = form_data.serializeArray();
       var send_data = JSON.stringify(serialized_data);
-      console.log(`send_data: ${typeof(form_data)}`);
+      console.dir(`send_data: ${send_data}`);
       $.ajax({
           type: "POST",
           url: "/call_from_ajax",
@@ -250,12 +273,11 @@
             fileSpecNo: Math.random().toString(32).substring(2),
             invoiceNo: $('#invoiceNo').val(),
             issueDate: $('#issueDate').val(),
-            issuerName: $('#issuerName').val(),
+            issuer: $('#issuer').val(),
             issuerAddress: $('#issuerAddress').val(),
             issuerTel: $('#issuerTel').val(),
             amount: $('#amount').val(),
             dueDate: $('#dueDate').val(),
-            registerCo: $('#registerCo').val(),
             dealDate: $('#dealDate').val(),
             registerNo: $('#registerNo').val(),
             issuer: $('#issuer').val(),
@@ -287,6 +309,7 @@
         language:'ja',
         format: 'yyyy/mm/dd',
         autoclose: true,
+        showButtonPanel: true,
     });
 </script>
 {% endblock %}

@@ -12,17 +12,6 @@ body {
     align-self: center;
 }
 
-.new::after {
-    content: "NEW";
-    color: #d10606;
-    font-size: 1.1rem;
-    border: 1px solid #d10606;
-    padding: 4px 8px;
-    margin: 0 0 0 20px;
-    display: inline-block;
-    line-height: 1;
-}
-
 .newstopic {
     display: flex;
     justify-content: center;
