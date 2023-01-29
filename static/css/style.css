@@ -7,6 +7,11 @@ body {
     background-size: cover;
 }
 
+.form-start-text {
+    text-align: center;
+    align-self: center;
+}
+
 .new::after {
     content: "NEW";
     color: #d10606;

@@ -46,7 +46,7 @@
     <div class="container">
       <h1 class="display-3">こんにちは!</h1>
       <p class="lead h2 pb-2">
-        このサイトはPeppolのデジタルインボイスを誰でもかんたんにつくれるようにしたものです。
+        このサイトはPeppolのデジタルインボイスとPDF生成を誰でもかんたんにつくれるようにしたものです。
       </p>
       <a class="btn btn-outline-primary btn-lg" href="#" role="button"
         >JP PINTの仕様はこちら</a
@@ -66,12 +66,17 @@
       <form id="invoice-form" method="post" onsubmit="return false;">
         <div class="form-group mb-3">
           <label for="invoiceNo" class="form-label">請求書番号：</label>
-          <input
-            id="invoiceNo"
-            type="text"
-            name="invoiceNo"
-            class="form-control"
-          />
+          <div class="row">
+            <div class="col-1 form-start-text">T-</div>
+            <input
+              id="invoiceNo"
+              class="col-10"
+              type="number"
+              name="invoiceNo"
+              class="form-control"
+            />
+          </div>
+          <div class="form-text">Tを除く数字13桁で入力してください。</div>
         </div>
         <div class="form-group mb-3">
           <label for="issueDate" class="form-label">発行日：</label>
@@ -79,7 +84,7 @@
             id="issueDate"
             type="text"
             name="issueDate"
-            class="form-control"
+            class="form-control datepicker"
           />
         </div>
         <div class="form-group mb-3">
@@ -88,7 +93,7 @@
             id="dealDate"
             type="text"
             name="dealDate"
-            class="form-control"
+            class="form-control datepicker"
           />
         </div>
         <div class="form-group mb-3">
@@ -142,7 +147,12 @@
         </div>
         <div class="form-group mb-3">
           <label for="dueDate" class="form-label">支払期日：</label>
-          <input id="dueDate" type="text" name="dueDate" class="form-control" />
+          <input
+            id="dueDate"
+            type="text"
+            name="dueDate"
+            class="form-control datepicker"
+          />
         </div>
         <div class="form-group mb-3">
           <label for="amount" class="form-label">請求額：</label>
@@ -273,5 +283,10 @@
               console.log("失敗");
           });
   });
+  $('.datepicker').datepicker({
+        language:'ja',
+        format: 'yyyy/mm/dd',
+        autoclose: true,
+    });
 </script>
 {% endblock %}
