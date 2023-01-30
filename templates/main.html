@@ -121,6 +121,34 @@
         </div>
 
         <div class="border rounded p-2 mb-2">
+          <div class="lead mark mb-2">明細</div>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">取引年月日</th>
+                  <th scope="col">品目</th>
+                  <th scope="col">数量</th>
+                  <th scope="col">単価</th>
+                  <th scope="col">税率</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" /></td>
+                  <td><input type="text" /></td>
+                  <td><input type="number" /></td>
+                  <td><input type="number" /></td>
+                  <td><input type="number" /></td>
+                  <td><button class="remove">-</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <button id="addRow">+ 追加</button>
+          </div>
+        </div>
+
+        <div class="border rounded p-2 mb-2">
           <div class="lead mark mb-2">売り手(債権者)情報</div>
           <div class="form-group">
             <label for="registerNo" class="form-label"
@@ -311,5 +339,20 @@
         autoclose: true,
         showButtonPanel: true,
     });
+
+  $(function(){
+    $(document).on('click', '.remove', function() {
+        console.log('remove function start');
+        $(this).parents('tr').remove();
+    });
+  });
+  $('#addRow').click(function(e){
+    e.preventDefault();
+    // tableの行数取得
+    var id = $(".table tbody").children().length + 1;
+    console.log(`明細行ID=${id}`);
+    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}" type="number" /></td><td><input id="taxDetail${id}" name="detail${id}" type="number" /></td><td><button class="remove">-</button></td></tr>`;
+    $('tbody').append(html);
+  });
 </script>
 {% endblock %}

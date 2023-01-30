@@ -100,7 +100,11 @@ def callfromajax():
             issueDate = request.form["issueDate"]
             issuer = request.form["issuer"]
 
+            # 明細取得 name="detail${id}"
+            detailList = request.form.getlist('detail1')
+
             app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
+            app.logger.warning(f"detailList: {detailList}")
 
             # output_path = Path.cwd() / "tmp" / filename
 
