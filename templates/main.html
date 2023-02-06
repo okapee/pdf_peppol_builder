@@ -119,7 +119,6 @@
             />
           </div>
         </div>
-
         <div class="border rounded p-2 mb-2">
           <div class="lead mark mb-2">明細</div>
           <div class="table-responsive">
@@ -135,11 +134,41 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><input type="text" /></td>
-                  <td><input type="text" /></td>
-                  <td><input type="number" /></td>
-                  <td><input type="number" /></td>
-                  <td><input type="number" /></td>
+                  <td>
+                    <input
+                      class="detail1 form-control"
+                      name="detail1"
+                      type="text"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="detail1 form-control"
+                      name="detail1"
+                      type="text"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="detail1 form-control"
+                      name="detail1"
+                      type="number"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="detail1 form-control"
+                      name="detail1"
+                      type="number"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      class="detail1 form-control"
+                      name="detail1"
+                      type="number"
+                    />
+                  </td>
                   <td><button class="remove">-</button></td>
                 </tr>
               </tbody>
@@ -147,7 +176,6 @@
             <button id="addRow">+ 追加</button>
           </div>
         </div>
-
         <div class="border rounded p-2 mb-2">
           <div class="lead mark mb-2">売り手(債権者)情報</div>
           <div class="form-group">
@@ -271,12 +299,12 @@
           value="リセット"
           onclick="reset()"
         /><br />
+        JP PINTフォーマットでのXMLファイルのダウンロードは<a
+          href="{{url_for('pintdownload')}}"
+          class="mt-4 pt-4"
+          >こちら</a
+        >
       </form>
-      JP PINTフォーマットでのXMLファイルのダウンロードは<a
-        src="http://www.google.com"
-        class="mt-4 pt-4"
-        >こちら</a
-      >
     </div>
     <div id="result" class="col-lg-7 border border-2">
       ここに生成されたPDFが表示されます。
@@ -293,28 +321,55 @@
       console.log(`invoiceNo: ${$('#invoiceNo').val()}, issueDate: ${$('#issueDate').val()}, issuerName: ${$('#issuerName').val()}`);
       var serialized_data = form_data.serializeArray();
       var send_data = JSON.stringify(serialized_data);
+
+      // 明細の値取得
+      /*const detail1 = $('.detail1').each(function(index, element){
+        return element.value;
+      }).get();*/
+
+      //console.log(`detail1: ${detail1}`);
+
+      var detail1List = [];
+      var detail1 = $(".detail1").serializeArray();
+      console.dir(detail1);
+
+      detail1.forEach(elm => {
+        Object.keys(elm).forEach(key => {
+          if(key=='value'){
+            detail1List.push(elm[key]);
+          }
+        });
+      });
+      console.log(`detail1List: ${Object.values(detail1List)}`);
+      console.log(`type: ${typeof(Object.values(detail1List))}`);
       console.dir(`send_data: ${send_data}`);
+
+      var formdata = JSON.stringify(
+         {
+            "fileSpecNo": Math.random().toString(32).substring(2),
+            "invoiceNo": $('#invoiceNo').val(),
+            "issueDate": $('#issueDate').val(),
+            "issuer": $('#issuer').val(),
+            "issuerAddress": $('#issuerAddress').val(),
+            "issuerTel": $('#issuerTel').val(),
+            "amount": $('#amount').val(),
+            "dueDate": $('#dueDate').val(),
+            "dealDate": $('#dealDate').val(),
+            "registerNo": $('#registerNo').val(),
+            "issuer": $('#issuer').val(),
+            "bank": $('#bank').val(),
+            "bBranch": $('#bBranch').val(),
+            "accountType": $('#accountType').val(),
+            "accountNo": $('#accountNo').val(),
+            "accountName": $('#accountName').val(),
+            "detail1": detail1List,
+          }
+      )
       $.ajax({
           type: "POST",
           url: "/call_from_ajax",
-          data: {
-            fileSpecNo: Math.random().toString(32).substring(2),
-            invoiceNo: $('#invoiceNo').val(),
-            issueDate: $('#issueDate').val(),
-            issuer: $('#issuer').val(),
-            issuerAddress: $('#issuerAddress').val(),
-            issuerTel: $('#issuerTel').val(),
-            amount: $('#amount').val(),
-            dueDate: $('#dueDate').val(),
-            dealDate: $('#dealDate').val(),
-            registerNo: $('#registerNo').val(),
-            issuer: $('#issuer').val(),
-            bank: $('#bank').val(),
-            bBranch: $('#bBranch').val(),
-            accountType: $('#accountType').val(),
-            accountNo: $('#accountNo').val(),
-            accountName: $('#accountName').val(),
-          },
+          contentType: "application/json; charset=utf-8",
+          data: formdata
       })
           .done(function (received_data) {
               // 戻ってきたのはJSON（文字列）
