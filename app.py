@@ -64,25 +64,9 @@ dictConfig(
     }
 )
 
-# Cloud SQLに接続し、テーブルを作成する(テーブルは予めコンソールから作成しておくこと!)
-# connection = pymysql.connect(host='34.84.231.41', user='root', password='Gn4+*5biC8=1nACI', db='peppol-builder')
-# with connection.cursor() as cursor:
-#     print(cursor.execute("show databases;"))
-#     sql = '''
-#     CREATE TABLE aiueo (
-#        student_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-#        first_name VARCHAR(50) NULL,
-#        last_name VARCHAR(50) NULL,
-#        birthday DATE NULL,
-#        gender ENUM('F','M')
-#     )'''
-#     cursor.execute(sql)
-
-
 @app.route("/")
 def index():
     return render_template("main.html")
-
 
 @app.route("/call_from_ajax", methods=["POST"])
 def callfromajax():
@@ -90,25 +74,24 @@ def callfromajax():
         encoded_string = ""
         global filename
         req = request.get_json()
-        # app.logger.warning(f'filename: {request.json["fileSpecNo"]}')
         filename = f'output_{req["fileSpecNo"]}.pdf'
         file_path = f"./tmp/{filename}"
-        app.logger.warning(f"file_path: {file_path}")
-        app.logger.warning(f"filename: {filename}")
         invoiceNo = req["invoiceNo"]
         issueDate = req["issueDate"]
         issuer = req["issuer"]
-
-        # 明細取得
-
-
-        detail1 = req['detail1']
-        # detailList = request.form['detail1[]']
-
-        # app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
-        app.logger.warning(f"detail1: {detail1}")
-
-        # output_path = Path.cwd() / "tmp" / filename
+        issuerAddress = req["issuerAddress"]
+        issuerTel = req["issuerTel"]
+        issueDate = req["issueDate"]
+        amount = req["amount"]
+        dueDate = req["dueDate"]
+        dealDate = req["dealDate"]
+        registerNo = req["registerNo"]
+        bank = req["bank"]
+        bBranch = req["bBranch"]
+        accountType = req["accountType"]
+        accountNo = req["accountNo"]
+        accountName = req["accountName"]
+        buyer = req["buyer"]
 
         # A4の新規PDFファイルを作成
         page = canvas.Canvas(f"/tmp/{filename}", pagesize=portrait(A4))
@@ -117,20 +100,59 @@ def callfromajax():
         # フォントの設定(第1引数：フォント、第2引数：サイズ)
         page.setFont("kokuri", 18)
 
-        amount = str(int(detail1[2])*int(detail1[3]) / 1.1) if req["amount"] == "" else req["amount"]
+        # amount = str(int(detail1[2])*int(detail1[3]) / 1.1) if req["amount"] == "" else req["amount"]
+
+        detailAmount = 0
+        # 明細取得
+        for i, detail in enumerate(req['detail']):
+            for j,value in enumerate(detail):
+                print(f'({i},{j}): {value}')
+                # 値がない場合、j=[0,1]は空文字を、j=[2,3]は数字の0を、j=4は10を挿入
+                if j == 4 and value == '10%':
+                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0) * 1.1
+                elif j == 4 and value == '8%':
+                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0) * 1.08
+                elif j == 4:
+                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0)
+
+            page.drawCentredString(65, 450 - 25*i, f"{i+1}")
+            page.drawCentredString(190, 450 - 25*i, detail[1])
+            page.drawCentredString(350, 450 - 25*i, detail[2])
+            page.drawCentredString(430, 450 - 25*i, detail[3])
+            page.drawCentredString(510, 450 - 25*i, str(math.floor(int(detail[2] if str.isdigit(detail[2]) else 0)*int(detail[3] if str.isdigit(detail[3]) else 0)*10) / 10))
+
+        # detailList = request.form['detail1[]']
+        # app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
+        app.logger.warning(f"detail: {detail}")
+
+        # output_path = Path.cwd() / "tmp" / filename
+
+        # 表示用請求金額
+        dispAmount = ''
+
+        if str.isdigit(amount):
+            dispAmount = str(math.floor(amount*10) / 10)
+        elif detailAmount != 0:
+            dispAmount = str(math.floor(detailAmount*10) / 10)
+        else:
+            dispAmount = '0'
+        
+        app.logger.warning(f"buyer: {buyer}")
 
         page.drawRightString(20 * cm, 28 * cm, f"発行日: {issueDate}")
         page.drawRightString(20 * cm, 27 * cm, f"請求書番号: {invoiceNo}")
-        page.drawString(1 * cm, 23 * cm, f"{issuer} 御中")
-        page.drawString(1 * cm, 22 * cm, f'ご請求金額: {amount} 円')
-        page.drawString(1 * cm, 21 * cm, f'お支払期限: {req["dueDate"]}')
-        page.drawRightString(20 * cm, 22 * cm, f'{req["issuerAddress"]}')
-        page.drawRightString(20 * cm, 21 * cm, f'{req["issuerTel"]}')
+        page.drawString(1 * cm, 23 * cm, f"{buyer} 御中")
+        page.drawString(1 * cm, 22 * cm, f'ご請求金額: {dispAmount} 円')
+        page.drawString(1 * cm, 21 * cm, f'お支払期限: {dueDate}')
+        page.drawRightString(20 * cm, 23 * cm, f'{issuer}')
+        page.drawRightString(20 * cm, 22 * cm, f'{issuerAddress}')
+        page.drawRightString(20 * cm, 21 * cm, f'{issuerTel}')
+        page.drawRightString(20 * cm, 20 * cm, f'登録番号: {registerNo}')
 
         # 指定座標が左端となるように文字を挿入 Ａ４サイズは、縦２９．７cm、横２１．０cm
         # フォントの設定(第1引数：フォント、第2引数：サイズ)
         page.setFont("kokuri", 25)
-        page.drawString(10 * cm, 25 * cm, "請求書")
+        page.drawString(9 * cm, 25 * cm, "請求書")
 
         # 明細
         # This Block Consist of Costumer Details
@@ -152,17 +174,10 @@ def callfromajax():
         page.line(400, 200, 400, 500)
         page.line(460, 200, 460, 500)
 
-        page.drawCentredString(65, 450, "1")
-        page.drawCentredString(190, 450, detail1[1])
-        page.drawCentredString(350, 450, detail1[2])
-        page.drawCentredString(430, 450, detail1[3])
-        app.logger.warn(f'detail1 type: {detail1[2]}')
-        page.drawCentredString(510, 450, str(int(detail1[2])*int(detail1[3])))
-
         page.drawString(
             50,
             150,
-            f'振込先: {req["bank"]}銀行  {req["bBranch"]}支店  {req["accountType"]}  {req["accountNo"]}  {req["accountName"]}',
+            f'振込先: {bank}銀行  {bBranch}支店  {accountType}  {accountNo}  {accountName}',
         )
 
         # PDFファイルとして保存

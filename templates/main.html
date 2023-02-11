@@ -60,6 +60,11 @@
   <div class="alert alert-success m-3" role="alert">
     <h3 class="alert=heading">What's New</h3>
     <p>
+      <i class="bi bi-info-circle-fill"></i> 2023.2.11
+      明細行を表示できるよう修正
+    </p>
+    <hr />
+    <p>
       <i class="bi bi-info-circle-fill"></i> 2023.1.29 フォームレイアウトを修正
     </p>
     <hr />
@@ -163,11 +168,14 @@
                     />
                   </td>
                   <td>
-                    <input
-                      class="detail1 form-control"
-                      name="detail1"
-                      type="number"
-                    />
+                    <select
+                      class="detail1 form-control form-control-md"
+                      name="taxrate"
+                    >
+                      <option value="10%">10%</option>
+                      <option value="8%">8%</option>
+                      <option value="それ以外">非課税・不課税</option>
+                    </select>
                   </td>
                   <td><button class="remove">-</button></td>
                 </tr>
@@ -290,6 +298,10 @@
             </div>
           </div>
           <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
+          <div class="form-group mb-3">
+            <label for="buyer" class="form-label">請求先会社名：</label>
+            <input id="buyer" type="text" name="buyer" class="form-control" />
+          </div>
         </div>
         <button type="submit" class="btn btn-primary mt-2">生成</button>
         <input
@@ -316,22 +328,31 @@
   $('#invoice-form').on('submit', function (e) {
       console.log('submit発火');
       e.preventDefault();
-      var form_data = $('#invoice-form');
-      console.dir(`form_data: ${form_data}`);
-      console.log(`invoiceNo: ${$('#invoiceNo').val()}, issueDate: ${$('#issueDate').val()}, issuerName: ${$('#issuerName').val()}`);
-      var serialized_data = form_data.serializeArray();
-      var send_data = JSON.stringify(serialized_data);
+      // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
+      row_num = $(".table tbody").children().length
+      console.log(`row_num: ${row_num}`);
 
-      // 明細の値取得
-      /*const detail1 = $('.detail1').each(function(index, element){
-        return element.value;
-      }).get();*/
+      var detailList = [];
+      for(let i=1; i<=row_num; i++){
+        console.log(`loop${i}`);
+        var tmpList = [];
+        var detail = $(".detail" + i).serializeArray();
+        detail.forEach(elm => {
+          Object.keys(elm).forEach(key => {
+            if(key=='value'){
+              tmpList.push(elm[key]);
+            }
+          });
+        });
+        detailList.push(tmpList);
+      }
 
-      //console.log(`detail1: ${detail1}`);
+      // console.log(`detailList: ${detailList[1][1]}`);
 
-      var detail1List = [];
+      /*var detail1List = [];
       var detail1 = $(".detail1").serializeArray();
-      console.dir(detail1);
+      detailList.push(detail1);
+      console.log(`detailList: ${detailList}`);
 
       detail1.forEach(elm => {
         Object.keys(elm).forEach(key => {
@@ -340,10 +361,7 @@
           }
         });
       });
-      console.log(`detail1List: ${Object.values(detail1List)}`);
-      console.log(`type: ${typeof(Object.values(detail1List))}`);
-      console.dir(`send_data: ${send_data}`);
-
+      */
       var formdata = JSON.stringify(
          {
             "fileSpecNo": Math.random().toString(32).substring(2),
@@ -356,13 +374,13 @@
             "dueDate": $('#dueDate').val(),
             "dealDate": $('#dealDate').val(),
             "registerNo": $('#registerNo').val(),
-            "issuer": $('#issuer').val(),
             "bank": $('#bank').val(),
             "bBranch": $('#bBranch').val(),
             "accountType": $('#accountType').val(),
             "accountNo": $('#accountNo').val(),
             "accountName": $('#accountName').val(),
-            "detail1": detail1List,
+            "detail": detailList,
+            "buyer": $('#buyer').val(),
           }
       )
       $.ajax({
@@ -406,7 +424,11 @@
     // tableの行数取得
     var id = $(".table tbody").children().length + 1;
     console.log(`明細行ID=${id}`);
-    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}" type="number" /></td><td><input id="taxDetail${id}" name="detail${id}" type="number" /></td><td><button class="remove">-</button></td></tr>`;
+    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" class="detail${id} form-control" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
+                      <option value="10%">10%</option>
+                      <option value="8%">8%</option>
+                      <option value="それ以外">非課税・不課税</option>
+                    </select><td><button class="remove">-</button></td></tr>`;
     $('tbody').append(html);
   });
 </script>
