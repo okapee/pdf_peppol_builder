@@ -27,6 +27,10 @@ body {
     border-radius: 15px;
 }
 
+#result {
+    margin-bottom: 2rem;
+}
+
 /* デフォルトでは非表示 */
 .error {
     display: none;
