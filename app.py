@@ -42,9 +42,6 @@ pdfmetrics.registerFont(TTFont("kokuri", font_path))
 file_path = ""
 filename = ""
 
-# font_path = Path(__file__).parent / "static" / "font" / "kokuri-subset.ttf"
-# custom_font = TrueTypeFont.true_type_font_from_file(font_path)
-
 dictConfig(
     {
         "version": 1,
@@ -100,8 +97,6 @@ def callfromajax():
         # フォントの設定(第1引数：フォント、第2引数：サイズ)
         page.setFont("kokuri", 18)
 
-        # amount = str(int(detail1[2])*int(detail1[3]) / 1.1) if req["amount"] == "" else req["amount"]
-
         detailAmount = 0
         # 明細取得
         for i, detail in enumerate(req['detail']):
@@ -125,12 +120,6 @@ def callfromajax():
             page.drawCentredString(350, 450 - 25*i, detail[2])
             page.drawCentredString(430, 450 - 25*i, detail[3])
             page.drawCentredString(510, 450 - 25*i, str(math.floor(int(detail[2] if str.isdigit(detail[2]) else 0)*int(detail[3] if str.isdigit(detail[3]) else 0)*10) / 10))
-
-        # detailList = request.form['detail1[]']
-        # app.logger.warning(f"invoice_no: {invoiceNo}, issueDate: {issueDate}")
-        app.logger.warning(f"detail: {detail}")
-
-        # output_path = Path.cwd() / "tmp" / filename
 
         # 表示用請求金額
         dispAmount = ''
@@ -225,14 +214,7 @@ def pintdownload():
     response.data = render_template("pint_min.xml")
     response.headers['Content-Type'] = 'application/xml'
     response.headers['Content-Disposition'] = 'attachment;filename=pint_min.xml'
-    return response    
-
-    # return send_file(
-    #     downloadFile,
-    #     as_attachment=True,
-    #     mimetype="text/xml",
-    # )
-
+    return response
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888, debug=True)

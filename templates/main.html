@@ -195,10 +195,14 @@
               <input
                 id="registerNo"
                 class="col-10"
-                type="number"
+                type="text"
+                placeholder="13桁の数字で入力してください"
+                maxlength="13"
+                pattern="^[0-9]{13}$"
                 name="registerNo"
                 class="form-control"
               />
+              <div class="error">正しい形式で入力してください</div>
             </div>
           </div>
           <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
@@ -220,10 +224,14 @@
             <label for="issuerTel" class="form-label">請求元電話番号：</label>
             <input
               id="issuerTel"
-              type="number"
+              type="tel"
+              pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
+              placeholder="数字で入力してください"
+              maxlength="11"
               name="issuerTel"
               class="form-control"
             />
+            <div class="error">正しい形式の電話番号を入力してください</div>
           </div>
           <div class="form-group mb-3">
             <label for="bank" class="form-label">振込先銀行名：</label>
@@ -291,10 +299,14 @@
               <input
                 id="buyerNo"
                 class="col-10"
-                type="number"
+                type="text"
+                placeholder="13桁の数字で入力してください"
+                maxlength="13"
+                pattern="^[0-9]{13}$"
                 name="buyerNo"
                 class="form-control"
               />
+              <div class="error">正しい形式で入力してください</div>
             </div>
           </div>
           <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
@@ -347,21 +359,6 @@
         detailList.push(tmpList);
       }
 
-      // console.log(`detailList: ${detailList[1][1]}`);
-
-      /*var detail1List = [];
-      var detail1 = $(".detail1").serializeArray();
-      detailList.push(detail1);
-      console.log(`detailList: ${detailList}`);
-
-      detail1.forEach(elm => {
-        Object.keys(elm).forEach(key => {
-          if(key=='value'){
-            detail1List.push(elm[key]);
-          }
-        });
-      });
-      */
       var formdata = JSON.stringify(
          {
             "fileSpecNo": Math.random().toString(32).substring(2),

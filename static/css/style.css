@@ -26,6 +26,22 @@ body {
     border: none;
     border-radius: 15px;
 }
+
+/* デフォルトでは非表示 */
+.error {
+    display: none;
+}
+
+/* 隣接セレクタで
+ * input:invalidの隣の
+ * エラーメッセージは表示する
+ */
+input:invalid+.error {
+    font-size: 0.9em;
+    display: block;
+    color: red;
+}
+
 #addRow {
     width: 130px;
     height: 40px;
