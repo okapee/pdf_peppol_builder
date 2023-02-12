@@ -107,6 +107,7 @@ def callfromajax():
         for i, detail in enumerate(req['detail']):
             for j,value in enumerate(detail):
                 print(f'({i},{j}): {value}')
+
                 # 値がない場合、j=[0,1]は空文字を、j=[2,3]は数字の0を、j=4は10を挿入
                 if j == 4 and value == '10%':
                     detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0) * 1.1
@@ -116,7 +117,11 @@ def callfromajax():
                     detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0)
 
             page.drawCentredString(65, 450 - 25*i, f"{i+1}")
-            page.drawCentredString(190, 450 - 25*i, detail[1])
+            # 税率が8%のときに商品名の横にアスタリスクを表示する
+            if detail[4]=='8%':
+                page.drawCentredString(190, 450 - 25*i, f'{detail[1]} *')
+            else:
+                page.drawCentredString(190, 450 - 25*i, f'{detail[1]}')
             page.drawCentredString(350, 450 - 25*i, detail[2])
             page.drawCentredString(430, 450 - 25*i, detail[3])
             page.drawCentredString(510, 450 - 25*i, str(math.floor(int(detail[2] if str.isdigit(detail[2]) else 0)*int(detail[3] if str.isdigit(detail[3]) else 0)*10) / 10))
@@ -131,7 +136,7 @@ def callfromajax():
         dispAmount = ''
 
         if str.isdigit(amount):
-            dispAmount = str(math.floor(amount*10) / 10)
+            dispAmount = str(math.floor(int(amount)*10) / 10)
         elif detailAmount != 0:
             dispAmount = str(math.floor(detailAmount*10) / 10)
         else:
@@ -147,7 +152,7 @@ def callfromajax():
         page.drawRightString(20 * cm, 23 * cm, f'{issuer}')
         page.drawRightString(20 * cm, 22 * cm, f'{issuerAddress}')
         page.drawRightString(20 * cm, 21 * cm, f'{issuerTel}')
-        page.drawRightString(20 * cm, 20 * cm, f'登録番号: {registerNo}')
+        page.drawRightString(20 * cm, 20 * cm, f'登録番号: T-{registerNo}')
 
         # 指定座標が左端となるように文字を挿入 Ａ４サイズは、縦２９．７cm、横２１．０cm
         # フォントの設定(第1引数：フォント、第2引数：サイズ)

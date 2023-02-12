@@ -141,7 +141,7 @@
                 <tr>
                   <td>
                     <input
-                      class="detail1 form-control"
+                      class="detail1 form-control datepicker"
                       name="detail1"
                       type="text"
                     />
@@ -424,7 +424,7 @@
     // tableの行数取得
     var id = $(".table tbody").children().length + 1;
     console.log(`明細行ID=${id}`);
-    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" class="detail${id} form-control" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
+    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
                       <option value="10%">10%</option>
                       <option value="8%">8%</option>
                       <option value="それ以外">非課税・不課税</option>
