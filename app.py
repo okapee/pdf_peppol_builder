@@ -61,9 +61,11 @@ dictConfig(
     }
 )
 
+
 @app.route("/")
 def index():
     return render_template("main.html")
+
 
 @app.route("/call_from_ajax", methods=["POST"])
 def callfromajax():
@@ -95,64 +97,88 @@ def callfromajax():
         app.logger.warning(f"page: {page}")
 
         # フォントの設定(第1引数：フォント、第2引数：サイズ)
-        page.setFont("kokuri", 18)
+        page.setFont("kokuri", 14)
 
         detailAmount = 0
         # 明細取得
-        for i, detail in enumerate(req['detail']):
-            for j,value in enumerate(detail):
-                print(f'({i},{j}): {value}')
+        for i, detail in enumerate(req["detail"]):
+            for j, value in enumerate(detail):
+                print(f"({i},{j}): {value}")
 
                 # 値がない場合、j=[0,1]は空文字を、j=[2,3]は数字の0を、j=4は10を挿入
-                if j == 4 and value == '10%':
-                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0) * 1.1
-                elif j == 4 and value == '8%':
-                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0) * 1.08
+                if j == 4 and value == "10%":
+                    detailAmount += (
+                        int(detail[2] if str.isdigit(detail[2]) else 0)
+                        * int(detail[3] if str.isdigit(detail[3]) else 0)
+                        * 1.1
+                    )
+                elif j == 4 and value == "8%":
+                    detailAmount += (
+                        int(detail[2] if str.isdigit(detail[2]) else 0)
+                        * int(detail[3] if str.isdigit(detail[3]) else 0)
+                        * 1.08
+                    )
                 elif j == 4:
-                    detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(detail[3] if str.isdigit(detail[3]) else 0)
+                    detailAmount += int(
+                        detail[2] if str.isdigit(detail[2]) else 0
+                    ) * int(detail[3] if str.isdigit(detail[3]) else 0)
 
-            page.drawCentredString(65, 450 - 25*i, f"{i+1}")
+            page.drawCentredString(65, 450 - 25 * i, f"{i+1}")
             # 税率が8%のときに商品名の横にアスタリスクを表示する
-            if detail[4]=='8%':
-                page.drawCentredString(190, 450 - 25*i, f'{detail[1]} *')
+            if detail[4] == "8%":
+                page.drawCentredString(190, 450 - 25 * i, f"{detail[1]} *")
             else:
-                page.drawCentredString(190, 450 - 25*i, f'{detail[1]}')
-            page.drawCentredString(350, 450 - 25*i, detail[2])
-            page.drawCentredString(430, 450 - 25*i, detail[3])
-            page.drawCentredString(510, 450 - 25*i, str(math.floor(int(detail[2] if str.isdigit(detail[2]) else 0)*int(detail[3] if str.isdigit(detail[3]) else 0)*10) / 10))
+                page.drawCentredString(190, 450 - 25 * i, f"{detail[1]}")
+            page.drawCentredString(350, 450 - 25 * i, detail[2])
+            page.drawCentredString(430, 450 - 25 * i, detail[3])
+            page.drawCentredString(
+                510,
+                450 - 25 * i,
+                str(
+                    math.floor(
+                        int(detail[2] if str.isdigit(detail[2]) else 0)
+                        * int(detail[3] if str.isdigit(detail[3]) else 0)
+                        * 10
+                    )
+                    / 10
+                ),
+            )
 
         # 表示用請求金額
-        dispAmount = ''
+        dispAmount = ""
 
         if str.isdigit(amount):
-            dispAmount = str(math.floor(int(amount)*10) / 10)
+            dispAmount = str(math.floor(int(amount) * 10) / 10)
         elif detailAmount != 0:
-            dispAmount = str(math.floor(detailAmount*10) / 10)
+            dispAmount = str(math.floor(detailAmount * 10) / 10)
         else:
-            dispAmount = '0'
-        
+            dispAmount = "0"
+
         app.logger.warning(f"buyer: {buyer}")
 
+        page.setFont("kokuri", 18)
         page.drawRightString(20 * cm, 28 * cm, f"発行日: {issueDate}")
         page.drawRightString(20 * cm, 27 * cm, f"請求書番号: {invoiceNo}")
-        page.drawString(1 * cm, 23 * cm, f"{buyer} 御中")
-        page.drawString(1 * cm, 22 * cm, f'ご請求金額: {dispAmount} 円')
-        page.drawString(1 * cm, 21 * cm, f'お支払期限: {dueDate}')
-        page.drawRightString(20 * cm, 23 * cm, f'{issuer}')
-        page.drawRightString(20 * cm, 22 * cm, f'{issuerAddress}')
-        page.drawRightString(20 * cm, 21 * cm, f'{issuerTel}')
-        page.drawRightString(20 * cm, 20 * cm, f'登録番号: T-{registerNo}')
+        page.drawString(1 * cm, 21 * cm, f"{buyer} 御中")
+        page.drawString(1 * cm, 20 * cm, f"ご請求金額: {dispAmount} 円")
+        page.drawString(1 * cm, 19 * cm, f"お支払期限: {dueDate}")
+
+        page.setFont("kokuri", 16)
+        page.drawRightString(20 * cm, 22 * cm, f"{issuer}")
+        page.drawRightString(20 * cm, 21 * cm, f"{issuerAddress}")
+        page.drawRightString(20 * cm, 20 * cm, f"{issuerTel}")
+        page.drawRightString(20 * cm, 19 * cm, f"登録番号: T-{registerNo}")
 
         # 指定座標が左端となるように文字を挿入 Ａ４サイズは、縦２９．７cm、横２１．０cm
         # フォントの設定(第1引数：フォント、第2引数：サイズ)
-        page.setFont("kokuri", 25)
+        page.setFont("kokuri", 26)
         page.drawString(9 * cm, 25 * cm, "請求書")
 
         # 明細
         # This Block Consist of Costumer Details
         # roundRect 1&2: 左下隅の座標、 3: 幅、 4: 高さ、 5: 丸み
         page.roundRect(40, 80, 520, 100, 5, stroke=1, fill=0)
-        page.setFont("kokuri", 15)
+        page.setFont("kokuri", 14)
 
         # This Block Consist of Item Description
         page.roundRect(40, 200, 520, 300, 5, stroke=1, fill=0)
@@ -171,7 +197,7 @@ def callfromajax():
         page.drawString(
             50,
             150,
-            f'振込先: {bank}銀行  {bBranch}支店  {accountType}  {accountNo}  {accountName}',
+            f"振込先: {bank}銀行  {bBranch}支店  {accountType}  {accountNo}  {accountName}",
         )
 
         # PDFファイルとして保存
@@ -203,6 +229,7 @@ def pdfdownload():
         mimetype="application/xml",
     )
 
+
 @app.route("/pintdownload", methods=["GET"])
 def pintdownload():
     downloadFile = "/tmp/pint_min.xml"
@@ -212,9 +239,10 @@ def pintdownload():
     """
     response = make_response()
     response.data = render_template("pint_min.xml")
-    response.headers['Content-Type'] = 'application/xml'
-    response.headers['Content-Disposition'] = 'attachment;filename=pint_min.xml'
+    response.headers["Content-Type"] = "application/xml"
+    response.headers["Content-Disposition"] = "attachment;filename=pint_min.xml"
     return response
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8888, debug=True)

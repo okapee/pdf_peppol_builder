@@ -137,49 +137,7 @@
                   <th scope="col">税率</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <input
-                      class="detail1 form-control datepicker"
-                      name="detail1"
-                      type="text"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      class="detail1 form-control"
-                      name="detail1"
-                      type="text"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      class="detail1 form-control"
-                      name="detail1"
-                      type="number"
-                    />
-                  </td>
-                  <td>
-                    <input
-                      class="detail1 form-control"
-                      name="detail1"
-                      type="number"
-                    />
-                  </td>
-                  <td>
-                    <select
-                      class="detail1 form-control form-control-md"
-                      name="taxrate"
-                    >
-                      <option value="10%">10%</option>
-                      <option value="8%">8%</option>
-                      <option value="それ以外">非課税・不課税</option>
-                    </select>
-                  </td>
-                  <td><button class="remove">-</button></td>
-                </tr>
-              </tbody>
+              <tbody></tbody>
             </table>
             <button id="addRow">+ 追加</button>
           </div>
@@ -403,12 +361,13 @@
               console.log("失敗");
           });
   });
+
   $('.datepicker').datepicker({
-        language:'ja',
-        format: 'yyyy/mm/dd',
-        autoclose: true,
-        showButtonPanel: true,
-    });
+      language:'ja',
+      format: 'yyyy/mm/dd',
+      autoclose: true,
+      showButtonPanel: true,
+  });
 
   $(function(){
     $(document).on('click', '.remove', function() {
@@ -421,7 +380,7 @@
     // tableの行数取得
     var id = $(".table tbody").children().length + 1;
     console.log(`明細行ID=${id}`);
-    var html = `<tr><td><input id="dealDateDetail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
+    var html = `<tr><td><input id="detail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" onclick="(function(){$('#detail${id}').datepicker(); $('#detail${id}').datepicker('show');})()" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
                       <option value="10%">10%</option>
                       <option value="8%">8%</option>
                       <option value="それ以外">非課税・不課税</option>
