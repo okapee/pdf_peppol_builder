@@ -31,7 +31,7 @@ Japan common commercial invoice, example1-minimum
 				</cac:TaxScheme>
 			</cac:PartyTaxScheme>
 			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>株式会社 〇〇商事</cbc:RegistrationName> <!-- IBT-027 - Seller name -->
+				<cbc:RegistrationName>{{ issuer }}</cbc:RegistrationName> <!-- IBT-027 - Seller name -->
 			</cac:PartyLegalEntity>
 		</cac:Party>
 	</cac:AccountingSupplierParty>
@@ -44,7 +44,7 @@ Japan common commercial invoice, example1-minimum
 				</cac:Country>
 			</cac:PostalAddress>
 			<cac:PartyLegalEntity>
-				<cbc:RegistrationName>株式会社 〇〇物産</cbc:RegistrationName> <!-- IBT-044 - Buyer name -->
+				<cbc:RegistrationName>{{ buyer }}</cbc:RegistrationName> <!-- IBT-044 - Buyer name -->
 			</cac:PartyLegalEntity>
 		</cac:Party>
 	</cac:AccountingCustomerParty>

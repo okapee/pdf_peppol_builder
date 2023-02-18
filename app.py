@@ -3,6 +3,7 @@ from flask import (
     Flask,
     request,
     render_template,
+    Response,
     send_file,
     make_response,
     send_from_directory,
@@ -218,6 +219,35 @@ def callfromajax():
     return json.dumps(dict)
     # return "test"
 
+@app.route("/xml/show", methods=["POST"])
+def xml_show():
+    """
+    XML データ表示
+    """
+    req = request.get_json()
+    invoiceNo = req["invoiceNo"]
+    issueDate = req["issueDate"]
+    issuer = req["issuer"]
+    issuerAddress = req["issuerAddress"]
+    issuerTel = req["issuerTel"]
+    issueDate = req["issueDate"]
+    amount = req["amount"]
+    dueDate = req["dueDate"]
+    dealDate = req["dealDate"]
+    registerNo = req["registerNo"]
+    bank = req["bank"]
+    bBranch = req["bBranch"]
+    accountType = req["accountType"]
+    accountNo = req["accountNo"]
+    accountName = req["accountName"]
+    buyer = req["buyer"]
+
+    app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
+
+    return Response(
+        render_template("pint_min.xml", issuer=issuer, buyer=buyer),
+        mimetype="application/xml"
+    )
 
 @app.route("/pdfdownload", methods=["GET"])
 def pdfdownload():

@@ -28,7 +28,17 @@ body {
 }
 
 #result {
+    margin-bottom: 2.5rem;
+    height: 70vh;
+    padding: 1rem;
+}
+
+#jppint {
     margin-bottom: 2rem;
+    height: 120vh;
+    overflow-wrap: break-word;
+    padding: 1rem;
+    overflow-y: scroll;
 }
 
 /* デフォルトでは非表示 */

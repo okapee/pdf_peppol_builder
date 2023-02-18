@@ -288,8 +288,11 @@
         >
       </form>
     </div>
-    <div id="result" class="col-lg-7 border border-2">
-      ここに生成されたPDFが表示されます。
+    <div class="col-lg-7">
+      <div id="result" class="border border-2">
+        ここに生成されたPDFが表示されます。
+      </div>
+      <div id="jppint" class="border border-2"></div>
     </div>
   </div>
 </div>
@@ -338,15 +341,23 @@
             "buyer": $('#buyer').val(),
           }
       )
-      $.ajax({
+      $.when(
+        $.ajax({
           type: "POST",
           url: "/call_from_ajax",
           contentType: "application/json; charset=utf-8",
           data: formdata
-      })
-          .done(function (received_data) {
+        }),
+        $.ajax({
+          type: "POST",
+          url: "/xml/show",
+          contentType: "application/json; charset=utf-8",
+          data: formdata
+        })
+      )
+          .done(function (received_data, xml_data) {
               // 戻ってきたのはJSON（文字列）
-              var dict = JSON.parse(received_data);
+              var dict = JSON.parse(received_data[0]);
               var encoded_string = dict["encoded_string"];
               console.log("encoded_string: " + encoded_string);
 
@@ -356,6 +367,15 @@
                   '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
                   encoded_string +
                   '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+
+              var xml = xml_data[0];
+              const parser = new DOMParser();
+              const dom = parser.parseFromString(xml, "application/xml");
+              // ルート要素の名前またはエラーメッセージを出力します
+              console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
+              const serializer = new XMLSerializer();
+              const xmlStr = serializer.serializeToString(xml);
+              $("#jppint").text(xmlStr);
           })
           .fail(function () {
               console.log("失敗");
