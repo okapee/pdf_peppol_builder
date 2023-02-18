@@ -27,6 +27,15 @@ body {
     border-radius: 15px;
 }
 
+.amazonad {
+    margin: 1rem;
+    background-color: ghostwhite;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-evenly;
+}
+
 #result {
     margin-bottom: 2.5rem;
     height: 70vh;
