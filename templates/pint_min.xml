@@ -8,8 +8,8 @@ Japan common commercial invoice, example1-minimum
 	<cbc:UBLVersionID>2.1</cbc:UBLVersionID>
 	<cbc:CustomizationID>urn:fdc:peppol:jp:billing:3.0</cbc:CustomizationID> 	<!-- IBT-024 - Specification identifier -->
 	<cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:billing:01:1.0</cbc:ProfileID> <!-- IBT-023 - Business process type -->
-	<cbc:ID>156</cbc:ID> <!-- IBT-001 - Invoice number -->
-	<cbc:IssueDate>2023-10-24</cbc:IssueDate> <!-- IBT-002 - Invoice issue date -->
+	<cbc:ID>{{ invoiceNo }}</cbc:ID> <!-- IBT-001 - Invoice number -->
+	<cbc:IssueDate>{{ issueDate }}</cbc:IssueDate> <!-- IBT-002 - Invoice issue date -->
 	<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode> <!-- IBT-003 - Invoice type code -->
 	<cbc:DocumentCurrencyCode>JPY</cbc:DocumentCurrencyCode> <!-- IBT-005 - Invoice currency code -->
 	<cac:InvoicePeriod> <!-- IBG-14 - INVOICING PERIOD -->
@@ -18,14 +18,14 @@ Japan common commercial invoice, example1-minimum
 	</cac:InvoicePeriod>
 	<cac:AccountingSupplierParty> <!-- IBG-04 - SELLER -->
 		<cac:Party>
-			<cbc:EndpointID schemeID="0188">1234567890123</cbc:EndpointID> <!-- IBT-034 - Seller electronic address, IBT-034-1 - Scheme identifier -->
+			<cbc:EndpointID schemeID="0188">{{ registerNo }}</cbc:EndpointID> <!-- IBT-034 - Seller electronic address, IBT-034-1 - Scheme identifier -->
 			<cac:PostalAddress> <!-- IBG-05 - SELLER POSTAL ADDRESS -->
 				<cac:Country>
 					<cbc:IdentificationCode>JP</cbc:IdentificationCode> <!-- IBT-040 - Seller country code -->
 				</cac:Country>
 			</cac:PostalAddress>
 			<cac:PartyTaxScheme>
-				<cbc:CompanyID>T1234567890123</cbc:CompanyID> <!-- IBT-031 - Seller TAX identifier -->
+				<cbc:CompanyID>T{{ registerNo }}</cbc:CompanyID> <!-- IBT-031 - Seller TAX identifier -->
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID> <!-- IBT-031, qualifier -->
 				</cac:TaxScheme>
@@ -37,7 +37,7 @@ Japan common commercial invoice, example1-minimum
 	</cac:AccountingSupplierParty>
 	<cac:AccountingCustomerParty> <!-- IBG-07 - BUYER -->
 		<cac:Party>
-			<cbc:EndpointID schemeID="0188">3210987654321</cbc:EndpointID> <!-- IBT-049 - Buyer electronic address, IBT-049-1 - Scheme identifier -->
+			<cbc:EndpointID schemeID="0188">{{ buyerNo }}</cbc:EndpointID> <!-- IBT-049 - Buyer electronic address, IBT-049-1 - Scheme identifier -->
 			<cac:PostalAddress> <!-- IBG-08 - BUYER POSTAL ADDRESS -->
 				<cac:Country>
 					<cbc:IdentificationCode>JP</cbc:IdentificationCode> <!-- IBT-055 - Buyer country code -->
@@ -49,10 +49,10 @@ Japan common commercial invoice, example1-minimum
 		</cac:Party>
 	</cac:AccountingCustomerParty>
 	<cac:TaxTotal>
-		<cbc:TaxAmount currencyID="JPY">25250</cbc:TaxAmount> <!-- IBT-110 - Invoice total TAX amount -->
+		<cbc:TaxAmount currencyID="JPY">{{ taxAmount }}</cbc:TaxAmount> <!-- IBT-110 - Invoice total TAX amount -->
 		<cac:TaxSubtotal> <!-- IBG-23 - TAX BREAKDOWN -->
-			<cbc:TaxableAmount currencyID="JPY">252500</cbc:TaxableAmount> <!-- IBT-116 - TAX category taxable amount -->
-			<cbc:TaxAmount currencyID="JPY">25250</cbc:TaxAmount> <!-- IBT-117 - TAX category tax amount -->
+			<cbc:TaxableAmount currencyID="JPY">{{ tenPerAmount }}</cbc:TaxableAmount> <!-- IBT-116 - TAX category taxable amount -->
+			<cbc:TaxAmount currencyID="JPY">{{ taxTenAmount }}</cbc:TaxAmount> <!-- IBT-117 - TAX category tax amount -->
 			<cac:TaxCategory>
 				<cbc:ID>S</cbc:ID> <!-- IBT-118 - TAX category code -->
 				<cbc:Percent>10</cbc:Percent> <!-- IBT-119 - TAX category rate -->
@@ -62,11 +62,11 @@ Japan common commercial invoice, example1-minimum
 			</cac:TaxCategory>
 		</cac:TaxSubtotal>
 		<cac:TaxSubtotal> <!-- IBG-23 - TAX BREAKDOWN -->
-			<cbc:TaxableAmount currencyID="JPY">3490</cbc:TaxableAmount> <!-- IBT-116 - TAX category taxable amount -->
-			<cbc:TaxAmount currencyID="JPY">0</cbc:TaxAmount> <!-- IBT-117 - TAX category tax amount -->
+			<cbc:TaxableAmount currencyID="JPY">{{ eightPerAmount }}</cbc:TaxableAmount> <!-- IBT-116 - TAX category taxable amount -->
+			<cbc:TaxAmount currencyID="JPY">{{ taxEightAmount }}</cbc:TaxAmount> <!-- IBT-117 - TAX category tax amount -->
 			<cac:TaxCategory>
-				<cbc:ID>E</cbc:ID> <!-- IBT-118 - TAX category code -->
-				<cbc:Percent>0</cbc:Percent> <!-- IBT-119 - TAX category rate -->
+				<cbc:ID>AA</cbc:ID> <!-- IBT-118 - TAX category code -->
+				<cbc:Percent>8</cbc:Percent> <!-- IBT-119 - TAX category rate -->
 				<cac:TaxScheme>
 					<cbc:ID>VAT</cbc:ID> <!-- IBT-118, qualifier -->
 				</cac:TaxScheme>
@@ -74,9 +74,9 @@ Japan common commercial invoice, example1-minimum
 		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal> <!-- IBG-22 - DOCUMENT TOTALS -->
-		<cbc:LineExtensionAmount currencyID="JPY">255990</cbc:LineExtensionAmount> <!-- IBT-106 - Sum of Invoice line net amount -->
-		<cbc:TaxExclusiveAmount currencyID="JPY">255990</cbc:TaxExclusiveAmount> <!-- IBT-109 - Invoice total amount without TAX -->
-		<cbc:TaxInclusiveAmount currencyID="JPY">281240</cbc:TaxInclusiveAmount> <!-- IBT-112 - Invoice total amount with TAX -->
+		<cbc:LineExtensionAmount currencyID="JPY">{{ dispAmount }}</cbc:LineExtensionAmount> <!-- IBT-106 - Sum of Invoice line net amount -->
+		<cbc:TaxExclusiveAmount currencyID="JPY">{{ taxExclusiveAmount }}</cbc:TaxExclusiveAmount> <!-- IBT-109 - Invoice total amount without TAX -->
+		<cbc:TaxInclusiveAmount currencyID="JPY">{{ dispAmount }}</cbc:TaxInclusiveAmount> <!-- IBT-112 - Invoice total amount with TAX -->
 		<cbc:AllowanceTotalAmount currencyID="JPY">0</cbc:AllowanceTotalAmount> <!-- IBT-107 - Sum of allowances on document level -->
 		<cbc:ChargeTotalAmount currencyID="JPY">0</cbc:ChargeTotalAmount> <!-- IBT-108 - Sum of charges on document level -->
 		<cbc:PrepaidAmount currencyID="JPY">0</cbc:PrepaidAmount> <!-- IBT-113 - Paid amount -->

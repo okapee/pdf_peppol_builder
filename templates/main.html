@@ -60,15 +60,14 @@
   <div class="alert alert-success m-3" role="alert">
     <h3 class="alert=heading">What's New</h3>
     <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.2.11
-      明細行を表示できるよう修正
+      <i class="bi bi-info-circle-fill"></i> 2023.2.19 JP
+      PINTの各項目に値をマッピング(明細行だけ対応できていませんスイマセン🙇‍♂️)
     </p>
     <hr />
     <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.1.29 フォームレイアウトを修正
+      <i class="bi bi-info-circle-fill"></i> 2023.2.11
+      明細行を表示できるよう修正
     </p>
-    <hr />
-    <p><i class="bi bi-info-circle-fill"></i> 2023.1.26 デザインを微修正</p>
     <hr />
     <p><i class="bi bi-info-circle-fill"></i> 2023.1.1 リリース</p>
   </div>
@@ -275,11 +274,10 @@
         </div>
         <button type="submit" class="btn btn-primary mt-2">生成</button>
         <input
-          type="button"
+          type="reset"
           id="reset"
           class="btn btn-primary mt-2"
           value="リセット"
-          onclick="reset()"
         /><br />
         <div class="amazonad">
           <iframe
@@ -365,6 +363,7 @@
             "accountName": $('#accountName').val(),
             "detail": detailList,
             "buyer": $('#buyer').val(),
+            "buyerNo": $('#buyerNo').val(),
           }
       )
       $.when(

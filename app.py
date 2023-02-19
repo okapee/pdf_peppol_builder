@@ -33,6 +33,25 @@ MIMETYPE = "application/xml"
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
+# encoded_string = ""
+# invoiceNo = ""
+# issueDate = ""
+# issuer = ""
+# issuerAddress = ""
+# issuerTel = ""
+# issueDate = ""
+# amount = "" 
+# dueDate = ""
+# dealDate = ""
+# registerNo = ""
+# bank = ""
+# bBranch = ""
+# accountType = ""
+# accountNo = ""
+# accountName = ""
+# buyer = ""
+# buyerNo = ""
+
 print(f'pathlib: {Path.cwd() / "static/font" }')
 
 font_path = Path.cwd() / "static/font/kokuri-subset.ttf"
@@ -76,6 +95,7 @@ def callfromajax():
         req = request.get_json()
         filename = f'output_{req["fileSpecNo"]}.pdf'
         file_path = f"./tmp/{filename}"
+        taxAmount = 0
         invoiceNo = req["invoiceNo"]
         issueDate = req["issueDate"]
         issuer = req["issuer"]
@@ -92,6 +112,7 @@ def callfromajax():
         accountNo = req["accountNo"]
         accountName = req["accountName"]
         buyer = req["buyer"]
+        buyerNo = req["buyerNo"]
 
         # A4の新規PDFファイルを作成
         page = canvas.Canvas(f"/tmp/{filename}", pagesize=portrait(A4))
@@ -101,6 +122,9 @@ def callfromajax():
         page.setFont("kokuri", 14)
 
         detailAmount = 0
+        eightPerAmount = 0
+        tenPerAmount = 0
+
         # 明細取得
         for i, detail in enumerate(req["detail"]):
             for j, value in enumerate(detail):
@@ -113,8 +137,18 @@ def callfromajax():
                         * int(detail[3] if str.isdigit(detail[3]) else 0)
                         * 1.1
                     )
+                    tenPerAmount += (
+                        int(detail[2] if str.isdigit(detail[2]) else 0)
+                        * int(detail[3] if str.isdigit(detail[3]) else 0)
+                        * 1.1
+                    )
                 elif j == 4 and value == "8%":
                     detailAmount += (
+                        int(detail[2] if str.isdigit(detail[2]) else 0)
+                        * int(detail[3] if str.isdigit(detail[3]) else 0)
+                        * 1.08
+                    )
+                    eightPerAmount += (
                         int(detail[2] if str.isdigit(detail[2]) else 0)
                         * int(detail[3] if str.isdigit(detail[3]) else 0)
                         * 1.08
@@ -123,6 +157,10 @@ def callfromajax():
                     detailAmount += int(
                         detail[2] if str.isdigit(detail[2]) else 0
                     ) * int(detail[3] if str.isdigit(detail[3]) else 0)
+
+            #消費税額合計を算出する
+            taxTenAmount = tenPerAmount*0.1
+            taxEightAmount =  eightPerAmount*0.08
 
             page.drawCentredString(65, 450 - 25 * i, f"{i+1}")
             # 税率が8%のときに商品名の横にアスタリスクを表示する
@@ -155,6 +193,7 @@ def callfromajax():
         else:
             dispAmount = "0"
 
+        # taxExclusiveAmount = float(dispAmount) - taxAmount
         app.logger.warning(f"buyer: {buyer}")
 
         page.setFont("kokuri", 18)
@@ -213,7 +252,6 @@ def callfromajax():
             encoded_string = base64.b64encode(pdf_file.read())
 
         dict = {
-            "invoice_no": "9999",
             "encoded_string": encoded_string.decode(),
         }  # 辞書
     return json.dumps(dict)
@@ -225,6 +263,7 @@ def xml_show():
     XML データ表示
     """
     req = request.get_json()
+    taxAmount = 0
     invoiceNo = req["invoiceNo"]
     issueDate = req["issueDate"]
     issuer = req["issuer"]
@@ -241,11 +280,66 @@ def xml_show():
     accountNo = req["accountNo"]
     accountName = req["accountName"]
     buyer = req["buyer"]
+    buyerNo = req["buyerNo"]
 
     app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
 
+    detailAmount = 0
+    eightPerAmount = 0
+    tenPerAmount = 0
+
+    # 明細取得
+    for i, detail in enumerate(req["detail"]):
+        for j, value in enumerate(detail):
+            print(f"({i},{j}): {value}")
+
+            # 値がない場合、j=[0,1]は空文字を、j=[2,3]は数字の0を、j=4は10を挿入
+            if j == 4 and value == "10%":
+                detailAmount += (
+                    int(detail[2] if str.isdigit(detail[2]) else 0)
+                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                    * 1.1
+                )
+                tenPerAmount += (
+                    int(detail[2] if str.isdigit(detail[2]) else 0)
+                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                    * 1.1
+                )
+            elif j == 4 and value == "8%":
+                detailAmount += (
+                    int(detail[2] if str.isdigit(detail[2]) else 0)
+                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                    * 1.08
+                )
+                eightPerAmount += (
+                    int(detail[2] if str.isdigit(detail[2]) else 0)
+                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                    * 1.08
+                )
+            elif j == 4:
+                detailAmount += int(
+                    detail[2] if str.isdigit(detail[2]) else 0
+                ) * int(detail[3] if str.isdigit(detail[3]) else 0)
+
+    #消費税額合計を算出する
+    taxTenAmount = tenPerAmount*0.1
+    taxEightAmount =  eightPerAmount*0.08
+    taxAmount = taxTenAmount + taxEightAmount
+
+    # 表示用請求金額
+    dispAmount = ""
+
+    if str.isdigit(amount):
+        dispAmount = str(math.floor(int(amount) * 10) / 10)
+    elif detailAmount != 0:
+        dispAmount = str(math.floor(detailAmount * 10) / 10)
+    else:
+        dispAmount = "0"
+
+    taxExclusiveAmount = float(dispAmount) - taxAmount
+
     return Response(
-        render_template("pint_min.xml", issuer=issuer, buyer=buyer),
+        render_template("pint_min.xml", invoiceNo=invoiceNo, issueDate=issueDate, registerNo=registerNo,  issuer=issuer, buyerNo=buyerNo, buyer=buyer, taxAmount=taxAmount, tenPerAmount=tenPerAmount, taxTenAmount=taxTenAmount, eightPerAmount=eightPerAmount, taxEightAmount=taxEightAmount, dispAmount=dispAmount, taxExclusiveAmount=taxExclusiveAmount),
         mimetype="application/xml"
     )
 
