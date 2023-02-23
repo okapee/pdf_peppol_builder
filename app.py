@@ -40,7 +40,7 @@ bootstrap = Bootstrap(app)
 # issuerAddress = ""
 # issuerTel = ""
 # issueDate = ""
-# amount = "" 
+# amount = ""
 # dueDate = ""
 # dealDate = ""
 # registerNo = ""
@@ -158,9 +158,9 @@ def callfromajax():
                         detail[2] if str.isdigit(detail[2]) else 0
                     ) * int(detail[3] if str.isdigit(detail[3]) else 0)
 
-            #消費税額合計を算出する
-            taxTenAmount = tenPerAmount*0.1
-            taxEightAmount =  eightPerAmount*0.08
+            # 消費税額合計を算出する
+            taxTenAmount = tenPerAmount * 0.1
+            taxEightAmount = eightPerAmount * 0.08
 
             page.drawCentredString(65, 450 - 25 * i, f"{i+1}")
             # 税率が8%のときに商品名の横にアスタリスクを表示する
@@ -257,6 +257,7 @@ def callfromajax():
     return json.dumps(dict)
     # return "test"
 
+
 @app.route("/xml/show", methods=["POST"])
 def xml_show():
     """
@@ -288,6 +289,8 @@ def xml_show():
     eightPerAmount = 0
     tenPerAmount = 0
 
+    app.logger.info(f'明細配列: {req["detail"]}')
+
     # 明細取得
     for i, detail in enumerate(req["detail"]):
         for j, value in enumerate(detail):
@@ -317,13 +320,13 @@ def xml_show():
                     * 1.08
                 )
             elif j == 4:
-                detailAmount += int(
-                    detail[2] if str.isdigit(detail[2]) else 0
-                ) * int(detail[3] if str.isdigit(detail[3]) else 0)
+                detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
+                    detail[3] if str.isdigit(detail[3]) else 0
+                )
 
-    #消費税額合計を算出する
-    taxTenAmount = tenPerAmount*0.1
-    taxEightAmount =  eightPerAmount*0.08
+    # 消費税額合計を算出する
+    taxTenAmount = tenPerAmount * 0.1
+    taxEightAmount = eightPerAmount * 0.08
     taxAmount = taxTenAmount + taxEightAmount
 
     # 表示用請求金額
@@ -339,9 +342,26 @@ def xml_show():
     taxExclusiveAmount = float(dispAmount) - taxAmount
 
     return Response(
-        render_template("pint_min.xml", invoiceNo=invoiceNo, issueDate=issueDate, registerNo=registerNo,  issuer=issuer, buyerNo=buyerNo, buyer=buyer, taxAmount=taxAmount, tenPerAmount=tenPerAmount, taxTenAmount=taxTenAmount, eightPerAmount=eightPerAmount, taxEightAmount=taxEightAmount, dispAmount=dispAmount, taxExclusiveAmount=taxExclusiveAmount),
-        mimetype="application/xml"
+        render_template(
+            "pint_min.xml",
+            invoiceNo=invoiceNo,
+            issueDate=issueDate,
+            registerNo=registerNo,
+            issuer=issuer,
+            buyerNo=buyerNo,
+            buyer=buyer,
+            taxAmount=taxAmount,
+            tenPerAmount=tenPerAmount,
+            taxTenAmount=taxTenAmount,
+            eightPerAmount=eightPerAmount,
+            taxEightAmount=taxEightAmount,
+            dispAmount=dispAmount,
+            taxExclusiveAmount=taxExclusiveAmount,
+            lines=req["detail"],
+        ),
+        mimetype="application/xml",
     )
+
 
 @app.route("/pdfdownload", methods=["GET"])
 def pdfdownload():
