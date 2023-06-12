@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 from flask import (
     Flask,
     request,
@@ -7,10 +8,14 @@ from flask import (
     send_file,
     make_response,
     send_from_directory,
+    redirect,
+    flash,
+    session,
 )
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from flask_login import LoginManager, UserMixin
 from logging.config import dictConfig
 
 import random
@@ -18,6 +23,7 @@ import math
 import json
 import base64
 import logging
+import psycopg2
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, portrait
@@ -61,6 +67,7 @@ pdfmetrics.registerFont(TTFont("kokuri", font_path))
 
 file_path = ""
 filename = ""
+encoded_string = ""
 
 dictConfig(
     {
@@ -86,11 +93,16 @@ dictConfig(
 def index():
     return render_template("main.html")
 
+@app.route("/login")
+def login():
+    conn = psycopg2.connect("postgresql://flaskuser:okazaki0608@localhost")
+
 
 @app.route("/call_from_ajax", methods=["POST"])
 def callfromajax():
     if request.method == "POST":
-        encoded_string = ""
+        # encoded_string = ""
+        global encoded_string
         global filename
         req = request.get_json()
         filename = f'output_{req["fileSpecNo"]}.pdf'
@@ -260,6 +272,7 @@ def callfromajax():
 
 @app.route("/xml/show", methods=["POST"])
 def xml_show():
+    # global encoded_string
     """
     XML データ表示
     """
@@ -283,6 +296,12 @@ def xml_show():
     buyer = req["buyer"]
     buyerNo = req["buyerNo"]
 
+    app.logger.info(f"global encoded_string: {encoded_string}")
+
+    # issueDateのフォーマットを整形
+    date_obj = datetime.strptime(issueDate, "%Y/%m/%d")
+    issueDate = date_obj.strftime("%Y-%m-%d")
+    
     app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
 
     detailAmount = 0
@@ -301,23 +320,19 @@ def xml_show():
                 detailAmount += (
                     int(detail[2] if str.isdigit(detail[2]) else 0)
                     * int(detail[3] if str.isdigit(detail[3]) else 0)
-                    * 1.1
                 )
                 tenPerAmount += (
                     int(detail[2] if str.isdigit(detail[2]) else 0)
                     * int(detail[3] if str.isdigit(detail[3]) else 0)
-                    * 1.1
                 )
             elif j == 4 and value == "8%":
                 detailAmount += (
                     int(detail[2] if str.isdigit(detail[2]) else 0)
                     * int(detail[3] if str.isdigit(detail[3]) else 0)
-                    * 1.08
                 )
                 eightPerAmount += (
                     int(detail[2] if str.isdigit(detail[2]) else 0)
                     * int(detail[3] if str.isdigit(detail[3]) else 0)
-                    * 1.08
                 )
             elif j == 4:
                 detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
@@ -325,21 +340,29 @@ def xml_show():
                 )
 
     # 消費税額合計を算出する
-    taxTenAmount = tenPerAmount * 0.1
-    taxEightAmount = eightPerAmount * 0.08
+    taxTenAmount = math.floor(tenPerAmount * 0.1)
+    taxEightAmount = math.floor(eightPerAmount * 0.08)
     taxAmount = taxTenAmount + taxEightAmount
 
     # 表示用請求金額
     dispAmount = ""
 
-    if str.isdigit(amount):
-        dispAmount = str(math.floor(int(amount) * 10) / 10)
-    elif detailAmount != 0:
-        dispAmount = str(math.floor(detailAmount * 10) / 10)
-    else:
-        dispAmount = "0"
+    # 請求額は小数点第二位まで
+    # if str.isdigit(amount):
+    #     dispAmount = str(round(int(amount), 2))
+    # elif detailAmount != 0:
+    #     dispAmount = str(round(detailAmount + taxAmount, 2))
+    # else:
+    #     dispAmount = "0"
 
-    taxExclusiveAmount = float(dispAmount) - taxAmount
+    # dispAmountとdetailAmountの値が異なる場合、detailAmountを優先する
+    if amount == str(detailAmount):
+        pass
+    else:
+        dispAmount = str(round(detailAmount + taxAmount, 2))
+
+
+    # taxExclusiveAmount = float(dispAmount) - taxAmount
 
     return Response(
         render_template(
@@ -356,7 +379,7 @@ def xml_show():
             eightPerAmount=eightPerAmount,
             taxEightAmount=taxEightAmount,
             dispAmount=dispAmount,
-            taxExclusiveAmount=taxExclusiveAmount,
+            taxExclusiveAmount=detailAmount,
             lines=req["detail"],
         ),
         mimetype="application/xml",
@@ -389,4 +412,7 @@ def pintdownload():
 
 
 if __name__ == "__main__":
+    # 環境変数を設定する.
+    # import os
+    # os.environ["PYTHON_ENV"] = "local"
     app.run(host="0.0.0.0", port=8888, debug=True)

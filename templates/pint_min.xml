@@ -74,14 +74,14 @@ Japan common commercial invoice, example1-minimum
 		</cac:TaxSubtotal>
 	</cac:TaxTotal>
 	<cac:LegalMonetaryTotal> <!-- IBG-22 - DOCUMENT TOTALS -->
-		<cbc:LineExtensionAmount currencyID="JPY">{{ dispAmount }}</cbc:LineExtensionAmount> <!-- IBT-106 - Sum of Invoice line net amount -->
+		<cbc:LineExtensionAmount currencyID="JPY">{{ taxExclusiveAmount }}</cbc:LineExtensionAmount> <!-- IBT-106 - Sum of Invoice line net amount -->
 		<cbc:TaxExclusiveAmount currencyID="JPY">{{ taxExclusiveAmount }}</cbc:TaxExclusiveAmount> <!-- IBT-109 - Invoice total amount without TAX -->
 		<cbc:TaxInclusiveAmount currencyID="JPY">{{ dispAmount }}</cbc:TaxInclusiveAmount> <!-- IBT-112 - Invoice total amount with TAX -->
 		<cbc:AllowanceTotalAmount currencyID="JPY">0</cbc:AllowanceTotalAmount> <!-- IBT-107 - Sum of allowances on document level -->
 		<cbc:ChargeTotalAmount currencyID="JPY">0</cbc:ChargeTotalAmount> <!-- IBT-108 - Sum of charges on document level -->
 		<cbc:PrepaidAmount currencyID="JPY">0</cbc:PrepaidAmount> <!-- IBT-113 - Paid amount -->
 		<cbc:PayableRoundingAmount currencyID="JPY">0</cbc:PayableRoundingAmount> <!-- IBT-114 - Rounding amount -->
-		<cbc:PayableAmount currencyID="JPY">281240</cbc:PayableAmount> <!-- IBT-115 - Amount due for payment -->
+		<cbc:PayableAmount currencyID="JPY">{{ dispAmount }}</cbc:PayableAmount> <!-- IBT-115 - Amount due for payment -->
 	</cac:LegalMonetaryTotal>
 	<!-- 明細 -->
 	{% for line in lines %}

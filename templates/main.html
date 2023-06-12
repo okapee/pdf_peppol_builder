@@ -119,7 +119,12 @@
             />
           </div>
           <div class="form-group mb-3">
-            <label for="amount" class="form-label">請求額：</label>
+            <label for="amount" class="form-label"
+              >請求額：
+              <span style="color: red; font-size: small"
+                >※明細金額の合算値と異なる場合、XMLは明細金額の合算値を優先</span
+              ></label
+            >
             <input
               id="amount"
               type="number"
@@ -137,7 +142,7 @@
                   <th scope="col">取引年月日</th>
                   <th scope="col">品目</th>
                   <th scope="col">数量</th>
-                  <th scope="col">単価</th>
+                  <th scope="col">単価(税抜)</th>
                   <th scope="col">税率</th>
                 </tr>
               </thead>
