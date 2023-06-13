@@ -24,3 +24,4 @@ Werkzeug
 WTForms
 reportlab
 gunicorn
+psycopg2
