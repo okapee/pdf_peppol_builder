@@ -60,19 +60,14 @@
   <div class="alert alert-success m-3" role="alert">
     <h3 class="alert=heading">What's New</h3>
     <p>
+      <i class="bi bi-info-circle-fill"></i> 2023.6.13 JP
+      PINTのバリデーションルールでエラーにならないよう修正しました👋
+    </p>
+    <p>
       <i class="bi bi-info-circle-fill"></i> 2023.2.23 JP 明細行のJP
       PINTマッピングに対応しました👋
     </p>
     <hr />
-    <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.2.19 JP
-      PINTの各項目に値をマッピング(明細行だけ対応できていませんスイマセン🙇‍♂️)
-    </p>
-    <hr />
-    <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.2.11
-      明細行を表示できるよう修正
-    </p>
     <hr />
     <p><i class="bi bi-info-circle-fill"></i> 2023.1.1 リリース</p>
   </div>
@@ -332,50 +327,87 @@
 </div>
 
 <script type="text/javascript">
-  $('#invoice-form').on('submit', function (e) {
-      console.log('submit発火');
-      e.preventDefault();
-      // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
-      row_num = $(".table tbody").children().length
-      console.log(`row_num: ${row_num}`);
+  $("#invoice-form").on("submit", function (e) {
+    console.log("submit発火");
+    e.preventDefault();
+    // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
+    row_num = $(".table tbody").children().length;
+    console.log(`row_num: ${row_num}`);
 
-      var detailList = [];
-      for(let i=1; i<=row_num; i++){
-        console.log(`loop${i}`);
-        var tmpList = [];
-        var detail = $(".detail" + i).serializeArray();
-        detail.forEach(elm => {
-          Object.keys(elm).forEach(key => {
-            if(key=='value'){
-              tmpList.push(elm[key]);
-            }
-          });
-        });
-        detailList.push(tmpList);
-      }
-
-      var formdata = JSON.stringify(
-         {
-            "fileSpecNo": Math.random().toString(32).substring(2),
-            "invoiceNo": $('#invoiceNo').val(),
-            "issueDate": $('#issueDate').val(),
-            "issuer": $('#issuer').val(),
-            "issuerAddress": $('#issuerAddress').val(),
-            "issuerTel": $('#issuerTel').val(),
-            "amount": $('#amount').val(),
-            "dueDate": $('#dueDate').val(),
-            "dealDate": $('#dealDate').val(),
-            "registerNo": $('#registerNo').val(),
-            "bank": $('#bank').val(),
-            "bBranch": $('#bBranch').val(),
-            "accountType": $('#accountType').val(),
-            "accountNo": $('#accountNo').val(),
-            "accountName": $('#accountName').val(),
-            "detail": detailList,
-            "buyer": $('#buyer').val(),
-            "buyerNo": $('#buyerNo').val(),
+    var detailList = [];
+    for (let i = 1; i <= row_num; i++) {
+      console.log(`loop${i}`);
+      var tmpList = [];
+      var detail = $(".detail" + i).serializeArray();
+      detail.forEach((elm) => {
+        Object.keys(elm).forEach((key) => {
+          if (key == "value") {
+            tmpList.push(elm[key]);
           }
-      )
+        });
+      });
+      detailList.push(tmpList);
+    }
+
+    var formdata = JSON.stringify({
+      fileSpecNo: Math.random().toString(32).substring(2),
+      invoiceNo: $("#invoiceNo").val(),
+      issueDate: $("#issueDate").val(),
+      issuer: $("#issuer").val(),
+      issuerAddress: $("#issuerAddress").val(),
+      issuerTel: $("#issuerTel").val(),
+      amount: $("#amount").val(),
+      dueDate: $("#dueDate").val(),
+      dealDate: $("#dealDate").val(),
+      registerNo: $("#registerNo").val(),
+      bank: $("#bank").val(),
+      bBranch: $("#bBranch").val(),
+      accountType: $("#accountType").val(),
+      accountNo: $("#accountNo").val(),
+      accountName: $("#accountName").val(),
+      detail: detailList,
+      buyer: $("#buyer").val(),
+      buyerNo: $("#buyerNo").val(),
+    });
+
+    fetch("/call_from_ajax", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: formdata,
+    })
+      .then(function (response) {
+        console.log("/call_from_ajax");
+        console.dir("/call/" + response);
+        if (!response.ok) {
+          console.log("API1");
+          throw new Error("API1 request failed");
+        }
+        return response;
+      })
+      .then(function (data) {
+        console.log("xml/show: " + data);
+        return fetch("/xml/show", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: formdata,
+        });
+      })
+      .then(function (response) {
+        if (!response.ok) {
+          console.log("responseの中");
+          throw new Error("API2 request failed");
+        }
+        return response.json();
+      })
+      .catch(function (error) {
+        console.log("errorの中");
+      });
+
+    /**
       $.when(
         $.ajax({
           type: "POST",
@@ -415,22 +447,23 @@
           .fail(function () {
               console.log("失敗");
           });
+          **/
   });
 
-  $('.datepicker').datepicker({
-      language:'ja',
-      format: 'yyyy/mm/dd',
-      autoclose: true,
-      showButtonPanel: true,
+  $(".datepicker").datepicker({
+    language: "ja",
+    format: "yyyy/mm/dd",
+    autoclose: true,
+    showButtonPanel: true,
   });
 
-  $(function(){
-    $(document).on('click', '.remove', function() {
-        console.log('remove function start');
-        $(this).parents('tr').remove();
+  $(function () {
+    $(document).on("click", ".remove", function () {
+      console.log("remove function start");
+      $(this).parents("tr").remove();
     });
   });
-  $('#addRow').click(function(e){
+  $("#addRow").click(function (e) {
     e.preventDefault();
     // tableの行数取得
     var id = $(".table tbody").children().length + 1;
@@ -440,7 +473,7 @@
                       <option value="8%">8%</option>
                       <option value="それ以外">非課税・不課税</option>
                     </select><td><button class="remove">-</button></td></tr>`;
-    $('tbody').append(html);
+    $("tbody").append(html);
   });
 </script>
 {% endblock %}

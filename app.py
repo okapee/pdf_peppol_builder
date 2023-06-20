@@ -31,34 +31,10 @@ from reportlab.lib.units import cm
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-from datetime import datetime
-from decimal import Decimal
-
 MIMETYPE = "application/xml"
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
-
-# encoded_string = ""
-# invoiceNo = ""
-# issueDate = ""
-# issuer = ""
-# issuerAddress = ""
-# issuerTel = ""
-# issueDate = ""
-# amount = ""
-# dueDate = ""
-# dealDate = ""
-# registerNo = ""
-# bank = ""
-# bBranch = ""
-# accountType = ""
-# accountNo = ""
-# accountName = ""
-# buyer = ""
-# buyerNo = ""
-
-print(f'pathlib: {Path.cwd() / "static/font" }')
 
 font_path = Path.cwd() / "static/font/kokuri-subset.ttf"
 
@@ -92,6 +68,7 @@ dictConfig(
 @app.route("/")
 def index():
     return render_template("main.html")
+
 
 @app.route("/login")
 def login():
@@ -266,7 +243,8 @@ def callfromajax():
         dict = {
             "encoded_string": encoded_string.decode(),
         }  # 辞書
-    return json.dumps(dict)
+    # return json.dumps(dict)
+    return "test"
     # return "test"
 
 
@@ -301,7 +279,7 @@ def xml_show():
     # issueDateのフォーマットを整形
     date_obj = datetime.strptime(issueDate, "%Y/%m/%d")
     issueDate = date_obj.strftime("%Y-%m-%d")
-    
+
     app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
 
     detailAmount = 0
@@ -317,22 +295,18 @@ def xml_show():
 
             # 値がない場合、j=[0,1]は空文字を、j=[2,3]は数字の0を、j=4は10を挿入
             if j == 4 and value == "10%":
-                detailAmount += (
-                    int(detail[2] if str.isdigit(detail[2]) else 0)
-                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
+                    detail[3] if str.isdigit(detail[3]) else 0
                 )
-                tenPerAmount += (
-                    int(detail[2] if str.isdigit(detail[2]) else 0)
-                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                tenPerAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
+                    detail[3] if str.isdigit(detail[3]) else 0
                 )
             elif j == 4 and value == "8%":
-                detailAmount += (
-                    int(detail[2] if str.isdigit(detail[2]) else 0)
-                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
+                    detail[3] if str.isdigit(detail[3]) else 0
                 )
-                eightPerAmount += (
-                    int(detail[2] if str.isdigit(detail[2]) else 0)
-                    * int(detail[3] if str.isdigit(detail[3]) else 0)
+                eightPerAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
+                    detail[3] if str.isdigit(detail[3]) else 0
                 )
             elif j == 4:
                 detailAmount += int(detail[2] if str.isdigit(detail[2]) else 0) * int(
@@ -360,7 +334,6 @@ def xml_show():
         pass
     else:
         dispAmount = str(round(detailAmount + taxAmount, 2))
-
 
     # taxExclusiveAmount = float(dispAmount) - taxAmount
 
