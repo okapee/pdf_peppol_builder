@@ -78,10 +78,12 @@ def login():
 @app.route("/call_from_ajax", methods=["POST"])
 def callfromajax():
     if request.method == "POST":
+        app.logger.warning("---/call_from_ajax---")
         # encoded_string = ""
         global encoded_string
         global filename
         req = request.get_json()
+        app.logger.warning('fileSpecNo: ' + req["fileSpecNo"])
         filename = f'output_{req["fileSpecNo"]}.pdf'
         file_path = f"./tmp/{filename}"
         taxAmount = 0
@@ -243,8 +245,8 @@ def callfromajax():
         dict = {
             "encoded_string": encoded_string.decode(),
         }  # 辞書
-    # return json.dumps(dict)
-    return "test"
+    return json.dumps(dict)
+    # return "test"
     # return "test"
 
 

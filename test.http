@@ -1,0 +1,53 @@
+GET http://127.0.0.1:5000 HTTP/1.1
+Content-Type: application/json
+
+
+###
+POST http://127.0.0.1:5000/call_from_ajax HTTP/1.1
+Content-Type: application/json
+
+{
+    "fileSpecNo":"random_name",
+    "invoiceNo":"1234567",
+    "issueDate":"2023/10/10",
+    "issuer":"okazaki",
+    "issuerAddress":"test",
+    "issuerTel":"09088780608",
+    "amount":"1234567",
+    "dueDate":"2023/10/10",
+    "dealDate":"2023/10/10",
+    "registerNo":"1234567",
+    "bank":"mizuho",
+    "bBranch":"akama",
+    "accountType":"normal",
+    "accountNo":"",
+    "accountName":"okazaki",
+    "detail":[],
+    "buyer":"nakamura",
+    "buyerNo":"1234567",
+}
+
+###
+POST http://127.0.0.1:5000/xml/show HTTP/1.1
+Content-Type: application/json
+
+{
+    "fileSpecNo":"random_name",
+    "invoiceNo":"1234567",
+    "issueDate":"2023/10/10",
+    "issuer":"okazaki",
+    "issuerAddress":"test",
+    "issuerTel":"09088780608",
+    "amount":"1234567",
+    "dueDate":"2023/10/10",
+    "dealDate":"2023/10/10",
+    "registerNo":"1234567",
+    "bank":"mizuho",
+    "bBranch":"akama",
+    "accountType":"normal",
+    "accountNo":"",
+    "accountName":"okazaki",
+    "detail":[],
+    "buyer":"nakamura",
+    "buyerNo":"1234567",
+}

@@ -1,5 +1,7 @@
 # 特定のファイルを無視
+.DS_Store
 .env
+.gitignore
 sample.json
 
 # 特定のフォルダを無視する
