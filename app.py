@@ -356,6 +356,7 @@ def xml_show():
             dispAmount=dispAmount,
             taxExclusiveAmount=detailAmount,
             lines=req["detail"],
+            encoded_string=encoded_string,
         ),
         mimetype="application/xml",
     )

@@ -16,6 +16,12 @@ Japan common commercial invoice, example1-minimum
 		<cbc:StartDate>2023-10-18</cbc:StartDate> <!-- IBT-073 - Invoicing period start date -->
 		<cbc:EndDate>2023-10-18</cbc:EndDate> <!-- IBT-074 - Invoicing period end date -->
 	</cac:InvoicePeriod>
+	<cac:AdditionalDocumentReference>
+        <cbc:ID>doc-1</cbc:ID>
+        <cac:Attachment>
+			<cbc:EmbeddedDocumentBinaryObject filename="sample.pdf" mimeCode="application/pdf">{{ encoded_string }}</cbc:EmbeddedDocumentBinaryObject>
+		</cac:Attachment>
+    </cac:AdditionalDocumentReference>
 	<cac:AccountingSupplierParty> <!-- IBG-04 - SELLER -->
 		<cac:Party>
 			<cbc:EndpointID schemeID="0188">{{ registerNo }}</cbc:EndpointID> <!-- IBT-034 - Seller electronic address, IBT-034-1 - Scheme identifier -->
