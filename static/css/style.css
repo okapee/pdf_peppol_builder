@@ -3,8 +3,13 @@ body {
 }
 
 .jumbotron {
-    background: url("https://placedog.net/1200/800?id=49") center no-repeat;
+    background: url(/images/Header.png) center no-repeat;
     background-size: cover;
+}
+
+.navbar-brand img {
+    max-width: 100%;
+    height: auto;
 }
 
 .form-start-text {

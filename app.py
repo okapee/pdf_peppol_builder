@@ -279,8 +279,8 @@ def xml_show():
     app.logger.info(f"global encoded_string: {encoded_string}")
 
     # issueDateのフォーマットを整形
-    date_obj = datetime.strptime(issueDate, "%Y/%m/%d")
-    issueDate = date_obj.strftime("%Y-%m-%d")
+    d =  datetime.strptime(issueDate, '%Y-%m-%d').date() if issueDate else datetime.today().date()
+    issueDate = d.strftime('%Y/%m/%d')
 
     app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
 

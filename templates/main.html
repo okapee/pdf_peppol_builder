@@ -6,69 +6,17 @@
 />
 {% endblock %} {% block navbar %}
 <div class="container">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Peppol&PDF Builder</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-        </ul>
-        <form class="d-flex">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
-      </div>
-    </div>
-  </nav>
   {% endblock %} {% block content %}
-  <div class="jumbotron p-4 text-white">
-    <div class="container">
-      <h1 class="display-3">こんにちは!</h1>
-      <p class="lead h2 pb-2">
-        このサイトはPeppolのデジタルインボイスと請求書PDFを誰でもかんたんにつくれるようにしたものです。
-      </p>
-      <a
-        class="btn btn-outline-primary btn-lg"
-        href="https://docs.peppol.eu/poac/jp/"
-        role="button"
-        >JP PINTの仕様はこちら</a
-      >
-    </div>
-  </div>
-
-  <div class="alert alert-success m-3" role="alert">
-    <h3 class="alert=heading">What's New</h3>
-    <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.6.13 JP
-      PINTのバリデーションルールでエラーにならないよう修正しました👋
-    </p>
-    <p>
-      <i class="bi bi-info-circle-fill"></i> 2023.2.23 JP 明細行のJP
-      PINTマッピングに対応しました👋
-    </p>
-    <p><i class="bi bi-info-circle-fill"></i> 2023.1.1 リリース</p>
-  </div>
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">
+      <img
+        src="{{ url_for('static', filename='images/Header.png') }}"
+        alt="example image"
+        class="img-fluid"
+      />
+    </a>
+    <!-- 他のナビゲーション要素を追加 -->
+  </nav>
 
   <div class="row m-2">
     <div class="col-lg-5 h-100">
