@@ -2,11 +2,6 @@ body {
     margin: 2px;
 }
 
-.jumbotron {
-    background: url(/images/Header.png) center no-repeat;
-    background-size: cover;
-}
-
 .navbar-brand img {
     max-width: 100%;
     height: auto;
