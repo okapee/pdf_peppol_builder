@@ -11,11 +11,13 @@ from flask import (
     redirect,
     flash,
     session,
+    url_for,
 )
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Boolean, DateTime
 from flask_login import LoginManager, UserMixin
+from flask_migrate import Migrate
 from logging.config import dictConfig
 
 import random
@@ -23,7 +25,9 @@ import math
 import json
 import base64
 import logging
-import psycopg2
+
+import mysql.connector
+import MySQLdb
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, portrait
@@ -64,15 +68,69 @@ dictConfig(
     }
 )
 
+# データベースへの接続とカーソルの生成
+connection = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="okazaki0608",
+    database="peppol_builder",
+)
+cursor = connection.cursor()
+
+# テーブルの初期化
+cursor.execute("DROP TABLE IF EXISTS users")
+
+# テーブルの作成
+cursor.execute(
+    """CREATE TABLE users(
+    id INT(11) AUTO_INCREMENT NOT NULL,
+    username VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
+    password VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
+    PRIMARY KEY (id)
+    )"""
+)
+
+# データの追加
+cursor.execute(
+    """INSERT INTO users (username, password)
+    VALUES ('taro', 'taro'),
+    ('jiro', 'jiro'),
+    ('sabro', 'sabro')
+    """
+)
+
 
 @app.route("/")
 def index():
     return render_template("main.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["POST"])
 def login():
-    conn = psycopg2.connect("postgresql://flaskuser:okazaki0608@localhost")
+    username = request.form["username"]
+    password = request.form["password"]
+
+    # MySQLに接続
+    # conn = mysql.connector.connect(**config)
+    # cursor = conn.cursor()
+
+    # ユーザー名とパスワードが一致するユーザーを取得
+    query = "SELECT * FROM users WHERE username=%s AND password=%s"
+    cursor.execute(query, (username, password))
+    user = cursor.fetchone()
+
+    # ユーザーが存在しない場合はエラーを返す
+    if user is None:
+        return "ユーザー名またはパスワードが間違っています。"
+
+    # セッションにログイン情報を保存
+    session["user_id"] = user[0]
+
+    # MySQLから切断
+    # cursor.close()
+    # conn.close()
+
+    return redirect(url_for("/"))
 
 
 @app.route("/call_from_ajax", methods=["POST"])
@@ -83,7 +141,7 @@ def callfromajax():
         global encoded_string
         global filename
         req = request.get_json()
-        app.logger.warning('fileSpecNo: ' + req["fileSpecNo"])
+        app.logger.warning("fileSpecNo: " + req["fileSpecNo"])
         filename = f'output_{req["fileSpecNo"]}.pdf'
         file_path = f"./tmp/{filename}"
         taxAmount = 0
@@ -279,7 +337,11 @@ def xml_show():
     app.logger.info(f"global encoded_string: {encoded_string}")
 
     # issueDateのフォーマットを整形
-    issueDate = datetime.strptime(issueDate, '%Y/%m/%d').date() if issueDate else datetime.today().date()
+    issueDate = (
+        datetime.strptime(issueDate, "%Y/%m/%d").date()
+        if issueDate
+        else datetime.today().date()
+    )
     # issueDate = d.strftime('%Y/%m/%d')
 
     app.logger.info(f"issuer: {issuer}, buyer: {buyer}")
