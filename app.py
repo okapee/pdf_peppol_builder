@@ -69,35 +69,35 @@ dictConfig(
 )
 
 # データベースへの接続とカーソルの生成
-connection = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="okazaki0608",
-    database="peppol_builder",
-)
-cursor = connection.cursor()
+# connection = mysql.connector.connect(
+#     user="root",
+#     host="localhost",
+#     database="peppol_builder",
+#     port="3307",
+# )
+# cursor = connection.cursor()
 
 # テーブルの初期化
-cursor.execute("DROP TABLE IF EXISTS users")
+# cursor.execute("DROP TABLE IF EXISTS users")
 
 # テーブルの作成
-cursor.execute(
-    """CREATE TABLE users(
-    id INT(11) AUTO_INCREMENT NOT NULL,
-    username VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
-    password VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
-    PRIMARY KEY (id)
-    )"""
-)
+# cursor.execute(
+#     """CREATE TABLE users(
+#     id INT(11) AUTO_INCREMENT NOT NULL,
+#     username VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
+#     password VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
+#     PRIMARY KEY (id)
+#     )"""
+# )
 
 # データの追加
-cursor.execute(
-    """INSERT INTO users (username, password)
-    VALUES ('taro', 'taro'),
-    ('jiro', 'jiro'),
-    ('sabro', 'sabro')
-    """
-)
+# cursor.execute(
+#     """INSERT INTO users (username, password)
+#     VALUES ('taro', 'taro'),
+#     ('jiro', 'jiro'),
+#     ('sabro', 'sabro')
+#     """
+# )
 
 
 @app.route("/")
@@ -453,4 +453,4 @@ if __name__ == "__main__":
     # 環境変数を設定する.
     # import os
     # os.environ["PYTHON_ENV"] = "local"
-    app.run(host="0.0.0.0", port=8888, debug=True)
+    app.run(host="0.0.0.0", debug=True)

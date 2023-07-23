@@ -1,10 +1,28 @@
 version: "3"
 services:
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: peppol_builder
+      TZ: "Asia/Tokyo"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./mysql/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: rm -rf /var/lib/mysql/*
+    ports:
+      - "3307:3306"
   app:
+    tty: true
     build: .
     ports:
-      - "8888:8888"
+      - "8888:5000"
     container_name: app
     volumes:
       - .:/usr/src/app
-    command: flask run --host=0.0.0.0
+    # command: flask run
+    depends_on:
+      - db
