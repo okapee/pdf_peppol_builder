@@ -13,8 +13,8 @@ RUN apt-get update && \
     apt-get remove -y build-essential && \
     apt-get autoremove -y
 
-EXPOSE 5000
+EXPOSE 8888
 
 COPY . .
 
-CMD ["flask", "run"]
+CMD ["python", "app.py"]

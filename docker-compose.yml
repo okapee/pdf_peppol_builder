@@ -2,11 +2,12 @@ version: "3"
 services:
   db:
     container_name: mysql
-    image: mysql:5.7.16
+    image: mysql:latest
+    platform: linux/amd64
     restart: on-failure:3
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_ROOT_PASSWORD: root
+      # MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: peppol_builder
       TZ: "Asia/Tokyo"
     command: --default-authentication-plugin=mysql_native_password
@@ -15,7 +16,7 @@ services:
       --explicit_defaults_for_timestamp=true
     volumes:
       - ./db-data:/usr/src/app
-      # - ./db-data/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+      - ./db-data/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
       - ./db-data/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
@@ -26,12 +27,11 @@ services:
     build: .
     ports:
       - "8888:5000"
-    container_name: app
+    depends_on:
+      - db
     volumes:
       - .:/usr/src/app
     # command: flask run
-    depends_on:
-      - db
     networks:
       - backend
 networks:

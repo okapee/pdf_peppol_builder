@@ -1,5 +1,6 @@
 from pathlib import Path
 from datetime import datetime
+import hashlib
 from flask import (
     Flask,
     request,
@@ -71,11 +72,42 @@ dictConfig(
 # データベースへの接続とカーソルの生成
 # connection = mysql.connector.connect(
 #     user="root",
+#     password="root",
 #     host="localhost",
 #     database="peppol_builder",
-#     port="3307",
+#     port="3306",
 # )
 # cursor = connection.cursor()
+
+while True:
+    try:
+        # MySQLに接続する
+        cnx = mysql.connector.connect(
+            user="root", password="root", host="db", database="peppol_builder"
+        )
+        cursor = cnx.cursor()
+
+        cursor.execute("SHOW TABLES LIKE 'users'")
+        result = cursor.fetchone()
+
+        # if not result:
+        #     cursor.execute(
+        #         "CREATE TABLE peppol_builder (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"
+        #     )
+        #     password = "mypassword"
+        #     hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+        #     cursor.execute(
+        #         "INSERT INTO peppol_builder (name, email, password) VALUES (%s, %s, %s)",
+        #         ("John Doe", "johndoe@example.com", hashed_password),
+        #     )
+
+        # MySQLとの接続を閉じる
+        cursor.close()
+        cnx.close()
+
+        break
+    except mysql.connector.Error as err:
+        print("MySQLに接続できませんでした: {}".format(err))
 
 # テーブルの初期化
 # cursor.execute("DROP TABLE IF EXISTS users")

@@ -34,7 +34,9 @@
 		"ms-vscode.live-server",
 		"kisstkondoros.vscode-gutter-preview",
 		"AnbuselvanRocky.bootstrap5-vscode",
-		"ms-python.vscode-pylance"
+		"ms-python.vscode-pylance",
+		"ms-vscode-remote.remote-containers",
+		"ms-vscode-remote.vscode-remote-extensionpack"
 	],
 	"service": "app",
 	"workspaceFolder": "/usr/src/app",
