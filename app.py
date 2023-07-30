@@ -22,7 +22,7 @@ from flask_login import LoginManager, UserMixin
 from flask_migrate import Migrate
 from logging.config import dictConfig
 
-import random
+import os
 import math
 import json
 import base64
@@ -72,9 +72,20 @@ dictConfig(
 )
 
 # MySQLに接続する
-cnx = mysql.connector.connect(
-    user="root", password="root", host="db", database="peppol_builder"
-)
+if os.environ.get("ENV") == "Dev":
+    # ローカルMySQLに接続
+    cnx = mysql.connector.connect(
+        host="db", user="root", password="root", database="peppol_builder"
+    )
+else:
+    # Heroku ClearDBに接続
+    cnx = mysql.connector.connect(
+        host=os.environ.get("CLEARDB_DATABASE_URL"), database="heroku_d4cc749976425a6"
+    )
+
+# cnx = mysql.connector.connect(
+#     user="root", password="root", host="db", database="peppol_builder"
+# )
 
 
 @app.route("/")
