@@ -13,6 +13,7 @@ from flask import (
     flash,
     session,
     url_for,
+    jsonify,
 )
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
@@ -39,6 +40,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 MIMETYPE = "application/xml"
 
 app = Flask(__name__)
+app.secret_key = "abcdefghijklmn"
 bootstrap = Bootstrap(app)
 
 font_path = Path.cwd() / "static/font/kokuri-subset.ttf"
@@ -69,72 +71,43 @@ dictConfig(
     }
 )
 
-# データベースへの接続とカーソルの生成
-# connection = mysql.connector.connect(
-#     user="root",
-#     password="root",
-#     host="localhost",
-#     database="peppol_builder",
-#     port="3306",
-# )
-# cursor = connection.cursor()
+# MySQLに接続する
+cnx = mysql.connector.connect(
+    user="root", password="root", host="db", database="peppol_builder"
+)
 
-while True:
+
+@app.route("/")
+def index():
     try:
-        # MySQLに接続する
-        cnx = mysql.connector.connect(
-            user="root", password="root", host="db", database="peppol_builder"
-        )
         cursor = cnx.cursor()
 
         cursor.execute("SHOW TABLES LIKE 'users'")
         result = cursor.fetchone()
 
-        # if not result:
-        #     cursor.execute(
-        #         "CREATE TABLE peppol_builder (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"
-        #     )
-        #     password = "mypassword"
-        #     hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-        #     cursor.execute(
-        #         "INSERT INTO peppol_builder (name, email, password) VALUES (%s, %s, %s)",
-        #         ("John Doe", "johndoe@example.com", hashed_password),
-        #     )
+        if not result:
+            cursor.execute(
+                "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"
+            )
+            password = "mypassword"
+            hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+            cursor.execute(
+                "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+                ("John Doe", "johndoe@example.com", hashed_password),
+            )
+            cnx.commit()
 
         # MySQLとの接続を閉じる
         cursor.close()
         cnx.close()
-
-        break
     except mysql.connector.Error as err:
         print("MySQLに接続できませんでした: {}".format(err))
 
-# テーブルの初期化
-# cursor.execute("DROP TABLE IF EXISTS users")
-
-# テーブルの作成
-# cursor.execute(
-#     """CREATE TABLE users(
-#     id INT(11) AUTO_INCREMENT NOT NULL,
-#     username VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
-#     password VARCHAR(255) NOT NULL COLLATE utf8mb4_unicode_ci,
-#     PRIMARY KEY (id)
-#     )"""
-# )
-
-# データの追加
-# cursor.execute(
-#     """INSERT INTO users (username, password)
-#     VALUES ('taro', 'taro'),
-#     ('jiro', 'jiro'),
-#     ('sabro', 'sabro')
-#     """
-# )
-
-
-@app.route("/")
-def index():
-    return render_template("main.html")
+    if "username" in session:
+        username = session["username"]
+        return render_template("main.html", username=username)
+    else:
+        return render_template("main.html", username="ななしさん")
 
 
 @app.route("/login", methods=["POST"])
@@ -142,27 +115,26 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    # MySQLに接続
-    # conn = mysql.connector.connect(**config)
-    # cursor = conn.cursor()
-
-    # ユーザー名とパスワードが一致するユーザーを取得
-    query = "SELECT * FROM users WHERE username=%s AND password=%s"
-    cursor.execute(query, (username, password))
+    cnx = mysql.connector.connect(
+        user="root", password="root", host="db", database="peppol_builder"
+    )
+    cursor = cnx.cursor()
+    cursor.execute(
+        "SELECT * FROM users WHERE username = %s AND password = %s",
+        (username, password),
+    )
     user = cursor.fetchone()
+    cursor.close()
 
-    # ユーザーが存在しない場合はエラーを返す
-    if user is None:
-        return "ユーザー名またはパスワードが間違っています。"
-
-    # セッションにログイン情報を保存
-    session["user_id"] = user[0]
-
-    # MySQLから切断
-    # cursor.close()
-    # conn.close()
-
-    return redirect(url_for("/"))
+    if user:
+        session["user_id"] = user[0]
+        session["username"] = user[1]
+        return redirect(url_for("index"))
+    else:
+        return (
+            jsonify({"success": False, "message": "Invalid username or password"}),
+            401,
+        )
 
 
 @app.route("/call_from_ajax", methods=["POST"])
@@ -336,8 +308,6 @@ def callfromajax():
             "encoded_string": encoded_string.decode(),
         }  # 辞書
     return json.dumps(dict)
-    # return "test"
-    # return "test"
 
 
 @app.route("/xml/show", methods=["POST"])
