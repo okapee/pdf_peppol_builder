@@ -78,12 +78,12 @@ if os.environ.get("ENV") == "Dev":
     )
 else:
     # Heroku ClearDBに接続   # ローカルMySQLに接続
-    db = mysql.connector.connect(
-        host="c84abf43@us-cdbr-east-06.cleardb.net",
-        user="b032360c0d5bea",
-        password="c84abf43",
-        database="heroku_d4cc749976425a6",
-    )
+    # db = mysql.connector.connect(
+    #     host="c84abf43@us-cdbr-east-06.cleardb.net",
+    #     user="b032360c0d5bea",
+    #     password="c84abf43",
+    #     database="heroku_d4cc749976425a6",
+    # )
 
 # cnx = mysql.connector.connect(
 #     user="root", password="root", host="db", database="peppol_builder"
@@ -92,37 +92,38 @@ else:
 
 @app.route("/")
 def index():
-    app.logger.info(f"cnx: {cnx}")
-    try:
-        cursor = cnx.cursor()
+    # app.logger.info(f"cnx: {cnx}")
+    # try:
+    #     cursor = cnx.cursor()
 
-        cursor.execute("SHOW TABLES LIKE 'users'")
-        result = cursor.fetchone()
+    #     cursor.execute("SHOW TABLES LIKE 'users'")
+    #     result = cursor.fetchone()
 
-        if not result:
-            cursor.execute(
-                "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"
-            )
-            password = "mypassword"
-            hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
-            cursor.execute(
-                "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
-                ("John Doe", "johndoe@example.com", hashed_password),
-            )
-            cnx.commit()
+    #     if not result:
+    #         cursor.execute(
+    #             "CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), email VARCHAR(255), password VARCHAR(255))"
+    #         )
+    #         password = "mypassword"
+    #         hashed_password = hashlib.sha256(password.encode("utf-8")).hexdigest()
+    #         cursor.execute(
+    #             "INSERT INTO users (name, email, password) VALUES (%s, %s, %s)",
+    #             ("John Doe", "johndoe@example.com", hashed_password),
+    #         )
+    #         cnx.commit()
 
-        # MySQLとの接続を閉じる
-        cursor.close()
-        cnx.close()
-    except mysql.connector.Error as err:
-        print("MySQLに接続できませんでした: {}".format(err))
+    #     # MySQLとの接続を閉じる
+    #     cursor.close()
+    #     cnx.close()
+    # except mysql.connector.Error as err:
+    #     print("MySQLに接続できませんでした: {}".format(err))
 
-    if "username" in session:
-        username = session["username"]
-        return render_template("main.html", username=username)
-    else:
-        return render_template("main.html", username="ななしさん")
+    # if "username" in session:
+    #     username = session["username"]
+    #     return render_template("main.html", username=username)
+    # else:
+    #     return render_template("main.html", username="ななしさん")
 
+    return render_template("main.html", username="ななしさん")
 
 @app.route("/login", methods=["POST"])
 def login():
