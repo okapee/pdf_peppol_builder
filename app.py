@@ -29,7 +29,6 @@ import base64
 import logging
 
 import mysql.connector
-import MySQLdb
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4, portrait
@@ -78,9 +77,12 @@ if os.environ.get("ENV") == "Dev":
         host="db", user="root", password="root", database="peppol_builder"
     )
 else:
-    # Heroku ClearDBに接続
-    cnx = mysql.connector.connect(
-        host=os.environ.get("CLEARDB_DATABASE_URL"), database="heroku_d4cc749976425a6"
+    # Heroku ClearDBに接続   # ローカルMySQLに接続
+    db = mysql.connector.connect(
+        host="c84abf43@us-cdbr-east-06.cleardb.net",
+        user="b032360c0d5bea",
+        password="c84abf43",
+        database="heroku_d4cc749976425a6",
     )
 
 # cnx = mysql.connector.connect(
