@@ -90,6 +90,7 @@ else:
 
 @app.route("/")
 def index():
+    app.logger.info(f"cnx: {cnx}")
     try:
         cursor = cnx.cursor()
 
