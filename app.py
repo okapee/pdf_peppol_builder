@@ -72,7 +72,7 @@ dictConfig(
 
 # MySQLに接続する
 # if os.environ.get("ENV") == "Dev": # こちらがメイン
-if os.environ.get("ENV") == "Env":  # 試験用
+if os.environ.get("ENV") == "Dev":  # 試験用
     # ローカルMySQLに接続
     cnx = mysql.connector.connect(
         host="db", user="root", password="root", database="peppol_builder"
