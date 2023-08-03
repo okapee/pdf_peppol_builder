@@ -132,9 +132,24 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
 
-    cnx = mysql.connector.connect(
-        user="root", password="root", host="db", database="peppol_builder"
-    )
+    # cnx = mysql.connector.connect(
+    #     user="root", password="root", host="db", database="peppol_builder"
+    # )
+
+    if os.environ.get("ENV") == "Dev":  # 試験用
+        # ローカルMySQLに接続
+        cnx = mysql.connector.connect(
+            host="db", user="root", password="root", database="peppol_builder"
+        )
+    else:
+        # Heroku ClearDBに接続   # ローカルMySQLに接続
+        cnx = mysql.connector.connect(
+            host="us-cdbr-east-06.cleardb.net",
+            user="b032360c0d5bea",
+            password="c84abf43",
+            database="heroku_d4cc749976425a6",
+        )
+
     cursor = cnx.cursor()
     cursor.execute(
         "SELECT * FROM users WHERE username = %s AND password = %s",
