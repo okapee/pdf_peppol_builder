@@ -7,8 +7,7 @@ services:
     restart: on-failure:3
     environment:
       MYSQL_ROOT_PASSWORD: root
-      # MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: peppol_builder
+      MYSQL_DATABASE: ${DB_NAME}
       TZ: "Asia/Tokyo"
     command: --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4

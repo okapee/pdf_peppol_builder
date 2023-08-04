@@ -90,456 +90,474 @@
       </div>
     </div>
   </div>
-
-  <div id="menu_bar">ようこそ{{username}}さん</div>
-
-  <div class="row m-2">
-    <div class="col-lg-5 h-100">
-      <form id="invoice-form" method="post" onsubmit="return false;">
-        <div class="border rounded p-2 mb-2">
-          <div class="lead mark mb-2">鏡(ヘッダー)</div>
-          <div class="form-group mb-3">
-            <label for="invoiceNo" class="form-label">請求書番号：</label>
-            <input
-              id="invoiceNo"
-              type="text"
-              name="invoiceNo"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="issueDate" class="form-label">発行日：</label>
-            <input
-              id="issueDate"
-              type="text"
-              name="issueDate"
-              class="form-control datepicker"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="dealDate" class="form-label">取引日：</label>
-            <input
-              id="dealDate"
-              type="text"
-              name="dealDate"
-              class="form-control datepicker"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="dueDate" class="form-label">支払期日：</label>
-            <input
-              id="dueDate"
-              type="text"
-              name="dueDate"
-              class="form-control datepicker"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="amount" class="form-label"
-              >請求額：
-              <span style="color: red; font-size: small"
-                >※明細金額の合算値と異なる場合、XMLは明細金額の合算値を優先</span
-              ></label
-            >
-            <input
-              id="amount"
-              type="number"
-              name="amount"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="border rounded p-2 mb-2">
-          <div class="lead mark mb-2">明細</div>
-          <div class="table-responsive">
-            <table class="table table-striped table-sm">
-              <thead>
-                <tr>
-                  <th scope="col">取引年月日</th>
-                  <th scope="col">品目</th>
-                  <th scope="col">数量</th>
-                  <th scope="col">単価(税抜)</th>
-                  <th scope="col">税率</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <button id="addRow">+ 追加</button>
-          </div>
-        </div>
-        <div class="border rounded p-2 mb-2">
-          <div class="lead mark mb-2">売り手(債権者)情報</div>
-          <div class="form-group">
-            <label for="registerNo" class="form-label"
-              >適格請求書発行事業者登録番号：</label
-            >
-            <div class="row">
-              <div class="col-1 form-start-text">T-</div>
-              <input
-                id="registerNo"
-                class="col-10"
-                type="text"
-                placeholder="13桁の数字で入力してください"
-                maxlength="13"
-                pattern="^[0-9]{13}$"
-                name="registerNo"
-                class="form-control"
-              />
-              <div class="error">正しい形式で入力してください</div>
-            </div>
-          </div>
-          <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
-
-          <div class="form-group mb-3">
-            <label for="issuer" class="form-label">請求元会社名：</label>
-            <input id="issuer" type="text" name="issuer" class="form-control" />
-          </div>
-          <div class="form-group mb-3">
-            <label for="issuerAddress" class="form-label">請求元住所：</label>
-            <input
-              id="issuerAddress"
-              type="text"
-              name="issuerAddress"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="issuerTel" class="form-label">請求元電話番号：</label>
-            <input
-              id="issuerTel"
-              type="tel"
-              pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
-              placeholder="数字で入力してください"
-              maxlength="11"
-              name="issuerTel"
-              class="form-control"
-            />
-            <div class="error">正しい形式の電話番号を入力してください</div>
-          </div>
-          <div class="form-group mb-3">
-            <label for="bank" class="form-label">振込先銀行名：</label>
-            <input id="bank" type="text" name="bank" class="form-control" />
-          </div>
-          <div class="form-group mb-3">
-            <label for="exampleInputEmail1" class="bBranch">支店名：</label>
-            <input
-              id="bBranch"
-              type="text"
-              name="bBranch"
-              class="form-control"
-            />
-          </div>
-          <div id="accountType" class="form-group mb-2">
-            <label>口座種別：</label>
-            <br />
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="accountType"
-                value="normal_deposit"
-              />
-              <label class="form-check-label" for="inlineRadio1">普通</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="accountType"
-                value="current_deposit"
-              />
-              <label class="form-check-label" for="inlineRadio2">当座</label>
-            </div>
-          </div>
-          <div class="form-group mb-3">
-            <label for="accountNo" class="form-label">口座番号：</label>
-            <input
-              id="accountNo"
-              type="number"
-              name="accountNo"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group mb-3">
-            <label for="accountName" class="form-label">口座名義：</label>
-            <input
-              id="accountName"
-              type="text"
-              name="accountName"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="border rounded p-2 mb-2">
-          <div class="lead mark mb-2">書い手(債務者)情報</div>
-
-          <div class="form-group">
-            <label for="buyerNo" class="form-label"
-              >適格請求書発行事業者登録番号：</label
-            >
-            <div class="row">
-              <div class="col-1 form-start-text">T-</div>
-              <input
-                id="buyerNo"
-                class="col-10"
-                type="text"
-                placeholder="13桁の数字で入力してください"
-                maxlength="13"
-                pattern="^[0-9]{13}$"
-                name="buyerNo"
-                class="form-control"
-              />
-              <div class="error">正しい形式で入力してください</div>
-            </div>
-          </div>
-          <div class="form-text mb-2">Tを除く数字13桁で入力してください。</div>
-          <div class="form-group mb-3">
-            <label for="buyer" class="form-label">請求先会社名：</label>
-            <input id="buyer" type="text" name="buyer" class="form-control" />
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary mt-2">生成</button>
-        <input
-          type="reset"
-          id="reset"
-          class="btn btn-primary mt-2"
-          value="リセット"
-        /><br />
-        <div class="amazonad">
-          <iframe
-            sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-            style="width: 120px; height: 240px"
-            marginwidth="0"
-            marginheight="0"
-            scrolling="no"
-            frameborder="0"
-            src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4800590612&linkId=8a104d7a8acdba1ae2280bf7d2ec0743"
-          ></iframe>
-          <iframe
-            sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-            style="width: 120px; height: 240px"
-            marginwidth="0"
-            marginheight="0"
-            scrolling="no"
-            frameborder="0"
-            src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0BVTH7YML&linkId=ecb700199181bee497b045484901d807"
-          ></iframe>
-          <iframe
-            sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-            style="width: 120px; height: 240px"
-            marginwidth="0"
-            marginheight="0"
-            scrolling="no"
-            frameborder="0"
-            src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4297130025&linkId=a6e355d55149e1e28b4651e9f77269fe"
-          ></iframe>
-        </div>
-      </form>
-    </div>
-    <div class="col-lg-7">
-      <div id="result" class="border border-2">
-        ここに生成されたPDFが表示されます。
+  <div>
+    <div class="menu_bar">
+      <div class="text">
+        <div class="dots"></div>
+        <p>
+          ログインしてできることは随時実装致します。しばしお待ちください。また、現在、ログイン可能なユーザー様を限定しています。ご了承ください。
+        </p>
+        <div class="back"></div>
       </div>
-      <div id="jppint" class="border border-2">
-        ここに生成されたJP PINT形式のデジタルインボイスが表示されます。
+      <div id="username">ようこそ{{username}}さん</div>
+    </div>
+    <div class="row m-2">
+      <div class="col-lg-5 h-100">
+        <form id="invoice-form" method="post" onsubmit="return false;">
+          <div class="border rounded p-2 mb-2">
+            <div class="lead mark mb-2">鏡(ヘッダー)</div>
+            <div class="form-group mb-3">
+              <label for="invoiceNo" class="form-label">請求書番号：</label>
+              <input
+                id="invoiceNo"
+                type="text"
+                name="invoiceNo"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="issueDate" class="form-label">発行日：</label>
+              <input
+                id="issueDate"
+                type="text"
+                name="issueDate"
+                class="form-control datepicker"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="dealDate" class="form-label">取引日：</label>
+              <input
+                id="dealDate"
+                type="text"
+                name="dealDate"
+                class="form-control datepicker"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="dueDate" class="form-label">支払期日：</label>
+              <input
+                id="dueDate"
+                type="text"
+                name="dueDate"
+                class="form-control datepicker"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="amount" class="form-label"
+                >請求額：
+                <span style="color: red; font-size: small"
+                  >※明細金額の合算値と異なる場合、XMLは明細金額の合算値を優先</span
+                ></label
+              >
+              <input
+                id="amount"
+                type="number"
+                name="amount"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="border rounded p-2 mb-2">
+            <div class="lead mark mb-2">明細</div>
+            <div class="table-responsive">
+              <table class="table table-striped table-sm">
+                <thead>
+                  <tr>
+                    <th scope="col">取引年月日</th>
+                    <th scope="col">品目</th>
+                    <th scope="col">数量</th>
+                    <th scope="col">単価(税抜)</th>
+                    <th scope="col">税率</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              <button id="addRow">+ 追加</button>
+            </div>
+          </div>
+          <div class="border rounded p-2 mb-2">
+            <div class="lead mark mb-2">売り手(債権者)情報</div>
+            <div class="form-group">
+              <label for="registerNo" class="form-label"
+                >適格請求書発行事業者登録番号：</label
+              >
+              <div class="row">
+                <div class="col-1 form-start-text">T-</div>
+                <input
+                  id="registerNo"
+                  class="col-10"
+                  type="text"
+                  placeholder="13桁の数字で入力してください"
+                  maxlength="13"
+                  pattern="^[0-9]{13}$"
+                  name="registerNo"
+                  class="form-control"
+                />
+                <div class="error">正しい形式で入力してください</div>
+              </div>
+            </div>
+            <div class="form-text mb-2">
+              Tを除く数字13桁で入力してください。
+            </div>
+
+            <div class="form-group mb-3">
+              <label for="issuer" class="form-label">請求元会社名：</label>
+              <input
+                id="issuer"
+                type="text"
+                name="issuer"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="issuerAddress" class="form-label">請求元住所：</label>
+              <input
+                id="issuerAddress"
+                type="text"
+                name="issuerAddress"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="issuerTel" class="form-label">請求元電話番号：</label>
+              <input
+                id="issuerTel"
+                type="tel"
+                pattern="\d{2,4}-?\d{2,4}-?\d{3,4}"
+                placeholder="数字で入力してください"
+                maxlength="11"
+                name="issuerTel"
+                class="form-control"
+              />
+              <div class="error">正しい形式の電話番号を入力してください</div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="bank" class="form-label">振込先銀行名：</label>
+              <input id="bank" type="text" name="bank" class="form-control" />
+            </div>
+            <div class="form-group mb-3">
+              <label for="exampleInputEmail1" class="bBranch">支店名：</label>
+              <input
+                id="bBranch"
+                type="text"
+                name="bBranch"
+                class="form-control"
+              />
+            </div>
+            <div id="accountType" class="form-group mb-2">
+              <label>口座種別：</label>
+              <br />
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="accountType"
+                  value="normal_deposit"
+                />
+                <label class="form-check-label" for="inlineRadio1">普通</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="accountType"
+                  value="current_deposit"
+                />
+                <label class="form-check-label" for="inlineRadio2">当座</label>
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="accountNo" class="form-label">口座番号：</label>
+              <input
+                id="accountNo"
+                type="number"
+                name="accountNo"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="accountName" class="form-label">口座名義：</label>
+              <input
+                id="accountName"
+                type="text"
+                name="accountName"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="border rounded p-2 mb-2">
+            <div class="lead mark mb-2">書い手(債務者)情報</div>
+
+            <div class="form-group">
+              <label for="buyerNo" class="form-label"
+                >適格請求書発行事業者登録番号：</label
+              >
+              <div class="row">
+                <div class="col-1 form-start-text">T-</div>
+                <input
+                  id="buyerNo"
+                  class="col-10"
+                  type="text"
+                  placeholder="13桁の数字で入力してください"
+                  maxlength="13"
+                  pattern="^[0-9]{13}$"
+                  name="buyerNo"
+                  class="form-control"
+                />
+                <div class="error">正しい形式で入力してください</div>
+              </div>
+            </div>
+            <div class="form-text mb-2">
+              Tを除く数字13桁で入力してください。
+            </div>
+            <div class="form-group mb-3">
+              <label for="buyer" class="form-label">請求先会社名：</label>
+              <input id="buyer" type="text" name="buyer" class="form-control" />
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary mt-2">生成</button>
+          <input
+            type="reset"
+            id="reset"
+            class="btn btn-primary mt-2"
+            value="リセット"
+          /><br />
+          <div class="amazonad">
+            <iframe
+              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
+              style="width: 120px; height: 240px"
+              marginwidth="0"
+              marginheight="0"
+              scrolling="no"
+              frameborder="0"
+              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4800590612&linkId=8a104d7a8acdba1ae2280bf7d2ec0743"
+            ></iframe>
+            <iframe
+              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
+              style="width: 120px; height: 240px"
+              marginwidth="0"
+              marginheight="0"
+              scrolling="no"
+              frameborder="0"
+              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0BVTH7YML&linkId=ecb700199181bee497b045484901d807"
+            ></iframe>
+            <iframe
+              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
+              style="width: 120px; height: 240px"
+              marginwidth="0"
+              marginheight="0"
+              scrolling="no"
+              frameborder="0"
+              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4297130025&linkId=a6e355d55149e1e28b4651e9f77269fe"
+            ></iframe>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-7">
+        <div id="result" class="border border-2">
+          ここに生成されたPDFが表示されます。
+        </div>
+        <div id="jppint" class="border border-2">
+          ここに生成されたJP PINT形式のデジタルインボイスが表示されます。
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script type="text/javascript">
-    $("#invoice-form").on("submit", function (e) {
-      console.log("submit発火");
-      e.preventDefault();
-      // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
-      row_num = $(".table tbody").children().length;
-      console.log(`row_num: ${row_num}`);
+  <script type="text/javascript">
+      $("#invoice-form").on("submit", function (e) {
+        console.log("submit発火");
+        e.preventDefault();
+        // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
+        row_num = $(".table tbody").children().length;
+        console.log(`row_num: ${row_num}`);
 
-      var detailList = [];
-      for (let i = 1; i <= row_num; i++) {
-        console.log(`loop${i}`);
-        var tmpList = [];
-        var detail = $(".detail" + i).serializeArray();
-        detail.forEach((elm) => {
-          Object.keys(elm).forEach((key) => {
-            if (key == "value") {
-              tmpList.push(elm[key]);
-            }
-          });
-        });
-        detailList.push(tmpList);
-      }
-
-      var formdata = JSON.stringify({
-        fileSpecNo: Math.random().toString(32).substring(2),
-        invoiceNo: $("#invoiceNo").val(),
-        issueDate: $("#issueDate").val(),
-        issuer: $("#issuer").val(),
-        issuerAddress: $("#issuerAddress").val(),
-        issuerTel: $("#issuerTel").val(),
-        amount: $("#amount").val(),
-        dueDate: $("#dueDate").val(),
-        dealDate: $("#dealDate").val(),
-        registerNo: $("#registerNo").val(),
-        bank: $("#bank").val(),
-        bBranch: $("#bBranch").val(),
-        accountType: $("#accountType").val(),
-        accountNo: $("#accountNo").val(),
-        accountName: $("#accountName").val(),
-        detail: detailList,
-        buyer: $("#buyer").val(),
-        buyerNo: $("#buyerNo").val(),
-      });
-
-      console.log("----");
-      console.dir(formdata);
-      console.log("----");
-
-      fetch("/call_from_ajax", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: formdata,
-      })
-        .then(function (response) {
-          console.log("/call_from_ajax");
-          console.dir(response);
-          console.dir(response.json)
-          if (!response.ok) {
-            console.log("API1");
-            throw new Error("API1 request failed");
-          }
-
-          return response.json();
-        })
-        .then(function (data) {
-           console.log("xml/show: ");
-           console.dir(JSON.parse(JSON.stringify(data)).encoded_string);
-
-          // PDFを表示
-          $("#result").removeClass("border border-2");
-          $("#result").html(
-              '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
-              JSON.parse(JSON.stringify(data)).encoded_string +
-              '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
-
-          console.log('xml/showへのアクセスはここから');
-          return fetch("/xml/show", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: formdata,
-          });
-        })
-        .then(function (response) {
-          if (!response.ok) {
-            console.log("responseの中");
-            throw new Error("API2 request failed");
-          }
-          return response.text();
-        })
-        .then(function (data){
-          console.log(data);
-          var xml = data;
-          $("#jppint").text(xml);
-
-        }).catch(function (error) {
-          console.log("errorの中");
-        });
-
-      /**
-        $.when(
-          $.ajax({
-            type: "POST",
-            url: "/call_from_ajax",
-            contentType: "application/json; charset=utf-8",
-            data: formdata
-          }),
-          $.ajax({
-            type: "POST",
-            url: "/xml/show",
-            contentType: "application/json; charset=utf-8",
-            data: formdata
-          })
-        )
-            .done(function (received_data, xml_data) {
-                // 戻ってきたのはJSON（文字列）
-                var dict = JSON.parse(received_data[0]);
-                var encoded_string = dict["encoded_string"];
-                console.log("encoded_string: " + encoded_string);
-
-                // PDFを表示
-                $("#result").removeClass("border border-2");
-                $("#result").html(
-                    '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
-                    encoded_string +
-                    '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
-
-                var xml = xml_data[0];
-                const parser = new DOMParser();
-                const dom = parser.parseFromString(xml, "application/xml");
-                // ルート要素の名前またはエラーメッセージを出力します
-                console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
-                const serializer = new XMLSerializer();
-                const xmlStr = serializer.serializeToString(xml);
-                $("#jppint").text(xmlStr);
-            })
-            .fail(function () {
-                console.log("失敗");
+        var detailList = [];
+        for (let i = 1; i <= row_num; i++) {
+          console.log(`loop${i}`);
+          var tmpList = [];
+          var detail = $(".detail" + i).serializeArray();
+          detail.forEach((elm) => {
+            Object.keys(elm).forEach((key) => {
+              if (key == "value") {
+                tmpList.push(elm[key]);
+              }
             });
-            **/
-    });
-
-    $(".datepicker").datepicker({
-      language: "ja",
-      format: "yyyy/mm/dd",
-      autoclose: true,
-      showButtonPanel: true,
-    });
-
-    $(function () {
-      $(document).on("click", ".remove", function () {
-        console.log("remove function start");
-        $(this).parents("tr").remove();
-      });
-    });
-    $("#addRow").click(function (e) {
-      e.preventDefault();
-      // tableの行数取得
-      var id = $(".table tbody").children().length + 1;
-      console.log(`明細行ID=${id}`);
-      var html = `<tr><td><input id="detail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" onclick="(function(){$('#detail${id}').datepicker(); $('#detail${id}').datepicker('show');})()" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
-                        <option value="10%">10%</option>
-                        <option value="8%">8%</option>
-                        <option value="それ以外">非課税・不課税</option>
-                      </select><td><button class="remove">-</button></td></tr>`;
-      $("tbody").append(html);
-    });
-
-  $(function() {
-    console.log("ログイン用ajax起動");
-    $('#loginForm').submit(function(event) {
-      event.preventDefault();
-      $.ajax({
-        type: 'POST',
-        url: '/login',
-        data: $('#loginForm').serialize(),
-        success: function(response) {
-          // ログイン成功時の処理
-          $('#login_button').modal('hide');
-          location.reload();
-          console.log("ログイン成功");
-          console.dir(response);
-        },
-        error: function(response) {
-          // ログイン失敗時の処理
-          $('#loginError').removeClass('d-none');
-          console.log("ログイン失敗");
+          });
+          detailList.push(tmpList);
         }
+
+        var formdata = JSON.stringify({
+          fileSpecNo: Math.random().toString(32).substring(2),
+          invoiceNo: $("#invoiceNo").val(),
+          issueDate: $("#issueDate").val(),
+          issuer: $("#issuer").val(),
+          issuerAddress: $("#issuerAddress").val(),
+          issuerTel: $("#issuerTel").val(),
+          amount: $("#amount").val(),
+          dueDate: $("#dueDate").val(),
+          dealDate: $("#dealDate").val(),
+          registerNo: $("#registerNo").val(),
+          bank: $("#bank").val(),
+          bBranch: $("#bBranch").val(),
+          accountType: $("#accountType").val(),
+          accountNo: $("#accountNo").val(),
+          accountName: $("#accountName").val(),
+          detail: detailList,
+          buyer: $("#buyer").val(),
+          buyerNo: $("#buyerNo").val(),
+        });
+
+        console.log("----");
+        console.dir(formdata);
+        console.log("----");
+
+        fetch("/call_from_ajax", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: formdata,
+        })
+          .then(function (response) {
+            console.log("/call_from_ajax");
+            console.dir(response);
+            console.dir(response.json)
+            if (!response.ok) {
+              console.log("API1");
+              throw new Error("API1 request failed");
+            }
+
+            return response.json();
+          })
+          .then(function (data) {
+             console.log("xml/show: ");
+             console.dir(JSON.parse(JSON.stringify(data)).encoded_string);
+
+            // PDFを表示
+            $("#result").removeClass("border border-2");
+            $("#result").html(
+                '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
+                JSON.parse(JSON.stringify(data)).encoded_string +
+                '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+
+            console.log('xml/showへのアクセスはここから');
+            return fetch("/xml/show", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: formdata,
+            });
+          })
+          .then(function (response) {
+            if (!response.ok) {
+              console.log("responseの中");
+              throw new Error("API2 request failed");
+            }
+            return response.text();
+          })
+          .then(function (data){
+            console.log(data);
+            var xml = data;
+            $("#jppint").text(xml);
+
+          }).catch(function (error) {
+            console.log("errorの中");
+          });
+
+        /**
+          $.when(
+            $.ajax({
+              type: "POST",
+              url: "/call_from_ajax",
+              contentType: "application/json; charset=utf-8",
+              data: formdata
+            }),
+            $.ajax({
+              type: "POST",
+              url: "/xml/show",
+              contentType: "application/json; charset=utf-8",
+              data: formdata
+            })
+          )
+              .done(function (received_data, xml_data) {
+                  // 戻ってきたのはJSON（文字列）
+                  var dict = JSON.parse(received_data[0]);
+                  var encoded_string = dict["encoded_string"];
+                  console.log("encoded_string: " + encoded_string);
+
+                  // PDFを表示
+                  $("#result").removeClass("border border-2");
+                  $("#result").html(
+                      '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
+                      encoded_string +
+                      '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+
+                  var xml = xml_data[0];
+                  const parser = new DOMParser();
+                  const dom = parser.parseFromString(xml, "application/xml");
+                  // ルート要素の名前またはエラーメッセージを出力します
+                  console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
+                  const serializer = new XMLSerializer();
+                  const xmlStr = serializer.serializeToString(xml);
+                  $("#jppint").text(xmlStr);
+              })
+              .fail(function () {
+                  console.log("失敗");
+              });
+              **/
+      });
+
+      $(".datepicker").datepicker({
+        language: "ja",
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        showButtonPanel: true,
+      });
+
+      $(function () {
+        $(document).on("click", ".remove", function () {
+          console.log("remove function start");
+          $(this).parents("tr").remove();
+        });
+      });
+      $("#addRow").click(function (e) {
+        e.preventDefault();
+        // tableの行数取得
+        var id = $(".table tbody").children().length + 1;
+        console.log(`明細行ID=${id}`);
+        var html = `<tr><td><input id="detail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" onclick="(function(){$('#detail${id}').datepicker(); $('#detail${id}').datepicker('show');})()" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
+                          <option value="10%">10%</option>
+                          <option value="8%">8%</option>
+                          <option value="それ以外">非課税・不課税</option>
+                        </select><td><button class="remove">-</button></td></tr>`;
+        $("tbody").append(html);
+      });
+
+    $(function() {
+      console.log("ログイン用ajax起動");
+      $('#loginForm').submit(function(event) {
+        event.preventDefault();
+        $.ajax({
+          type: 'POST',
+          url: '/login',
+          data: $('#loginForm').serialize(),
+          success: function(response) {
+            // ログイン成功時の処理
+            $('#login_button').modal('hide');
+            location.reload();
+            console.log("ログイン成功");
+            console.dir(response);
+          },
+          error: function(response) {
+            // ログイン失敗時の処理
+            $('#loginError').removeClass('d-none');
+            console.log("ログイン失敗");
+          }
+        });
       });
     });
-  });
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
+</div>

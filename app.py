@@ -110,9 +110,7 @@ def index():
         username = session["username"]
         return render_template("main.html", username=username)
     else:
-        return render_template("main.html", username="ななしさん")
-
-    return render_template("main.html", username="ななしさん")
+        return render_template("main.html", username="ななし")
 
 
 @app.route("/login", methods=["POST"])
