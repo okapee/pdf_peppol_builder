@@ -322,50 +322,38 @@
             class="btn btn-primary mt-2"
             value="リセット"
           /><br />
-          <div class="amazonad">
-            <iframe
-              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-              style="width: 120px; height: 240px"
-              marginwidth="0"
-              marginheight="0"
-              scrolling="no"
-              frameborder="0"
-              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4800590612&linkId=8a104d7a8acdba1ae2280bf7d2ec0743"
-            ></iframe>
-            <iframe
-              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-              style="width: 120px; height: 240px"
-              marginwidth="0"
-              marginheight="0"
-              scrolling="no"
-              frameborder="0"
-              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=B0BVTH7YML&linkId=ecb700199181bee497b045484901d807"
-            ></iframe>
-            <iframe
-              sandbox="allow-popups allow-scripts allow-modals allow-forms allow-same-origin"
-              style="width: 120px; height: 240px"
-              marginwidth="0"
-              marginheight="0"
-              scrolling="no"
-              frameborder="0"
-              src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&bc1=000000&IS2=1&bg1=FFFFFF&fc1=000000&lc1=0000FF&t=okazaki060803-22&language=ja_JP&o=9&p=8&l=as4&m=amazon&f=ifr&ref=as_ss_li_til&asins=4297130025&linkId=a6e355d55149e1e28b4651e9f77269fe"
-            ></iframe>
-          </div>
+          <!--旧Amazonアフィ-->
         </form>
       </div>
       <div class="col-lg-7">
         <div id="result" class="border border-2">
           ここに生成されたPDFが表示されます。
         </div>
+        <div id="result_dl"></div>
         <div id="jppint" class="border border-2" onclick="copyText()">
           ここに生成されたJP PINT形式のデジタルインボイスが表示されます。
         </div>
-        <div class="position-fixed top-0 end-0 p-3  " style="z-index: 11">
+        <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
           <div id="alert-container"></div>
         </div>
       </div>
     </div>
   </div>
+
+  <div id="amawidget-ZrvEgjGFHMgw"></div>
+  <script
+    defer
+    language="JavaScript"
+    type="text/javascript"
+    src="https://amawidget.yutbr.com/script/amawidgetjs-v1-0-5.php?AssociateTag=okazaki060803-22&ItemCount=15&Row=horizontal&ItemMaxWidth=100&ItemMaxHeight=150&Display=rm&BrowseNodeIds=466282,466292,466298,466302,492054,1040106,3371411,16462081,3544106051,7251477051&IntervalDay=7&SalesRank=50&DivId=amawidget-ZrvEgjGFHMgw"
+  ></script>
+  <noscript
+    ><a
+      target="_blank"
+      href="https://www.amazon.co.jp/b?_encoding=UTF8&tag=paapiyou-22&linkCode=ur2&linkId=b49fc871f742dd7ef1af19fdcd04e02e&camp=247&creative=1211&node=2501045051"
+      >人気コミック</a
+    ></noscript
+  >
 
   <script type="text/javascript">
               $("#invoice-form").on("submit", function (e) {
@@ -442,7 +430,8 @@
                     $("#result").html(
                         '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
                         JSON.parse(JSON.stringify(data)).encoded_string +
-                        '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+                        '">');
+                      $("#result_dl").html('<a style="display: block; margin-bottom: 1.5rem; padding-left: 1rem" href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
 
                     formdata = JSON.parse(formdata);
                     formdata.encoded_string = JSON.parse(JSON.stringify(data)).encoded_string;
