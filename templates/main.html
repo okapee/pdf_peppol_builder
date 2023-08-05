@@ -99,7 +99,7 @@
         </p>
         <div class="back"></div>
       </div>
-      <div id="username">ようこそ{{username}}さん</div>
+      <div id="username">ようこそ {{username}} さん</div>
     </div>
     <div class="row m-2">
       <div class="col-lg-5 h-100">
@@ -357,211 +357,233 @@
         <div id="result" class="border border-2">
           ここに生成されたPDFが表示されます。
         </div>
-        <div id="jppint" class="border border-2">
+        <div id="jppint" class="border border-2" onclick="copyText()">
           ここに生成されたJP PINT形式のデジタルインボイスが表示されます。
+        </div>
+        <div class="position-fixed top-0 end-0 p-3  " style="z-index: 11">
+          <div id="alert-container"></div>
         </div>
       </div>
     </div>
   </div>
 
   <script type="text/javascript">
-      $("#invoice-form").on("submit", function (e) {
-        console.log("submit発火");
-        e.preventDefault();
-        // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
-        row_num = $(".table tbody").children().length;
-        console.log(`row_num: ${row_num}`);
+              $("#invoice-form").on("submit", function (e) {
+                console.log("submit発火");
+                e.preventDefault();
+                // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
+                row_num = $(".table tbody").children().length;
+                console.log(`row_num: ${row_num}`);
 
-        var detailList = [];
-        for (let i = 1; i <= row_num; i++) {
-          console.log(`loop${i}`);
-          var tmpList = [];
-          var detail = $(".detail" + i).serializeArray();
-          detail.forEach((elm) => {
-            Object.keys(elm).forEach((key) => {
-              if (key == "value") {
-                tmpList.push(elm[key]);
-              }
-            });
-          });
-          detailList.push(tmpList);
-        }
+                var detailList = [];
+                for (let i = 1; i <= row_num; i++) {
+                  console.log(`loop${i}`);
+                  var tmpList = [];
+                  var detail = $(".detail" + i).serializeArray();
+                  detail.forEach((elm) => {
+                    Object.keys(elm).forEach((key) => {
+                      if (key == "value") {
+                        tmpList.push(elm[key]);
+                      }
+                    });
+                  });
+                  detailList.push(tmpList);
+                }
 
-        var formdata = JSON.stringify({
-          fileSpecNo: Math.random().toString(32).substring(2),
-          invoiceNo: $("#invoiceNo").val(),
-          issueDate: $("#issueDate").val(),
-          issuer: $("#issuer").val(),
-          issuerAddress: $("#issuerAddress").val(),
-          issuerTel: $("#issuerTel").val(),
-          amount: $("#amount").val(),
-          dueDate: $("#dueDate").val(),
-          dealDate: $("#dealDate").val(),
-          registerNo: $("#registerNo").val(),
-          bank: $("#bank").val(),
-          bBranch: $("#bBranch").val(),
-          accountType: $("#accountType").val(),
-          accountNo: $("#accountNo").val(),
-          accountName: $("#accountName").val(),
-          detail: detailList,
-          buyer: $("#buyer").val(),
-          buyerNo: $("#buyerNo").val(),
-        });
+                var formdata = JSON.stringify({
+                  fileSpecNo: Math.random().toString(32).substring(2),
+                  invoiceNo: $("#invoiceNo").val(),
+                  issueDate: $("#issueDate").val(),
+                  issuer: $("#issuer").val(),
+                  issuerAddress: $("#issuerAddress").val(),
+                  issuerTel: $("#issuerTel").val(),
+                  amount: $("#amount").val(),
+                  dueDate: $("#dueDate").val(),
+                  dealDate: $("#dealDate").val(),
+                  registerNo: $("#registerNo").val(),
+                  bank: $("#bank").val(),
+                  bBranch: $("#bBranch").val(),
+                  accountType: $("#accountType").val(),
+                  accountNo: $("#accountNo").val(),
+                  accountName: $("#accountName").val(),
+                  detail: detailList,
+                  buyer: $("#buyer").val(),
+                  buyerNo: $("#buyerNo").val(),
+                });
 
-        console.log("----");
-        console.dir(formdata);
-        console.log("----");
+                console.log("----");
+                console.dir(formdata);
+                console.log("----");
 
-        fetch("/call_from_ajax", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: formdata,
-        })
-          .then(function (response) {
-            console.log("/call_from_ajax");
-            console.dir(response);
-            console.dir(response.json)
-            if (!response.ok) {
-              console.log("API1");
-              throw new Error("API1 request failed");
-            }
+                fetch("/call_from_ajax", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: formdata,
+                })
+                  .then(function (response) {
+                    console.log("/call_from_ajax");
+                    console.dir(response);
+                    console.dir(response.json)
+                    if (!response.ok) {
+                      console.log("API1");
+                      throw new Error("API1 request failed");
+                    }
 
-            return response.json();
-          })
-          .then(function (data) {
-             console.log("xml/show: ");
-             console.dir(JSON.parse(JSON.stringify(data)).encoded_string);
+                    return response.json();
+                  })
+                  .then(function (data) {
+                     console.log("xml/show: ");
+                     console.dir(JSON.parse(JSON.stringify(data)).encoded_string);
 
-            // PDFを表示
-            $("#result").removeClass("border border-2");
-            $("#result").html(
-                '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
-                JSON.parse(JSON.stringify(data)).encoded_string +
-                '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+                    // PDFを表示
+                    $("#result").removeClass("border border-2");
+                    $("#result").html(
+                        '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
+                        JSON.parse(JSON.stringify(data)).encoded_string +
+                        '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
 
-            formdata = JSON.parse(formdata);
-            formdata.encoded_string = JSON.parse(JSON.stringify(data)).encoded_string;
-            formdata = JSON.stringify(formdata);
+                    formdata = JSON.parse(formdata);
+                    formdata.encoded_string = JSON.parse(JSON.stringify(data)).encoded_string;
+                    formdata = JSON.stringify(formdata);
 
-            console.log('xml/showへのアクセスはここから');
-            return fetch("/xml/show", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: formdata,
-            });
-          })
-          .then(function (response) {
-            if (!response.ok) {
-              console.log("responseの中");
-              throw new Error("API2 request failed");
-            }
-            return response.text();
-          })
-          .then(function (data){
-            console.log(data);
-            var xml = data;
-            $("#jppint").text(xml);
+                    console.log('xml/showへのアクセスはここから');
+                    return fetch("/xml/show", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: formdata,
+                    });
+                  })
+                  .then(function (response) {
+                    if (!response.ok) {
+                      console.log("responseの中");
+                      throw new Error("API2 request failed");
+                    }
+                    return response.text();
+                  })
+                  .then(function (data){
+                    console.log(data);
+                    var xml = data;
+                    $("#jppint").text(xml);
 
-          }).catch(function (error) {
-            console.log("errorの中");
-          });
+                  }).catch(function (error) {
+                    console.log("errorの中");
+                  });
 
-        /**
-          $.when(
-            $.ajax({
-              type: "POST",
-              url: "/call_from_ajax",
-              contentType: "application/json; charset=utf-8",
-              data: formdata
-            }),
-            $.ajax({
-              type: "POST",
-              url: "/xml/show",
-              contentType: "application/json; charset=utf-8",
-              data: formdata
-            })
-          )
-              .done(function (received_data, xml_data) {
-                  // 戻ってきたのはJSON（文字列）
-                  var dict = JSON.parse(received_data[0]);
-                  var encoded_string = dict["encoded_string"];
-                  console.log("encoded_string: " + encoded_string);
+                /**
+                  $.when(
+                    $.ajax({
+                      type: "POST",
+                      url: "/call_from_ajax",
+                      contentType: "application/json; charset=utf-8",
+                      data: formdata
+                    }),
+                    $.ajax({
+                      type: "POST",
+                      url: "/xml/show",
+                      contentType: "application/json; charset=utf-8",
+                      data: formdata
+                    })
+                  )
+                      .done(function (received_data, xml_data) {
+                          // 戻ってきたのはJSON（文字列）
+                          var dict = JSON.parse(received_data[0]);
+                          var encoded_string = dict["encoded_string"];
+                          console.log("encoded_string: " + encoded_string);
 
-                  // PDFを表示
-                  $("#result").removeClass("border border-2");
-                  $("#result").html(
-                      '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
-                      encoded_string +
-                      '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
+                          // PDFを表示
+                          $("#result").removeClass("border border-2");
+                          $("#result").html(
+                              '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
+                              encoded_string +
+                              '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
 
-                  var xml = xml_data[0];
-                  const parser = new DOMParser();
-                  const dom = parser.parseFromString(xml, "application/xml");
-                  // ルート要素の名前またはエラーメッセージを出力します
-                  console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
-                  const serializer = new XMLSerializer();
-                  const xmlStr = serializer.serializeToString(xml);
-                  $("#jppint").text(xmlStr);
-              })
-              .fail(function () {
-                  console.log("失敗");
+                          var xml = xml_data[0];
+                          const parser = new DOMParser();
+                          const dom = parser.parseFromString(xml, "application/xml");
+                          // ルート要素の名前またはエラーメッセージを出力します
+                          console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
+                          const serializer = new XMLSerializer();
+                          const xmlStr = serializer.serializeToString(xml);
+                          $("#jppint").text(xmlStr);
+                      })
+                      .fail(function () {
+                          console.log("失敗");
+                      });
+                      **/
               });
-              **/
-      });
 
-      $(".datepicker").datepicker({
-        language: "ja",
-        format: "yyyy/mm/dd",
-        autoclose: true,
-        showButtonPanel: true,
-      });
+              $(".datepicker").datepicker({
+                language: "ja",
+                format: "yyyy/mm/dd",
+                autoclose: true,
+                showButtonPanel: true,
+              });
 
-      $(function () {
-        $(document).on("click", ".remove", function () {
-          console.log("remove function start");
-          $(this).parents("tr").remove();
-        });
-      });
-      $("#addRow").click(function (e) {
-        e.preventDefault();
-        // tableの行数取得
-        var id = $(".table tbody").children().length + 1;
-        console.log(`明細行ID=${id}`);
-        var html = `<tr><td><input id="detail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" onclick="(function(){$('#detail${id}').datepicker(); $('#detail${id}').datepicker('show');})()" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
-                          <option value="10%">10%</option>
-                          <option value="8%">8%</option>
-                          <option value="それ以外">非課税・不課税</option>
-                        </select><td><button class="remove">-</button></td></tr>`;
-        $("tbody").append(html);
-      });
+              $(function () {
+                $(document).on("click", ".remove", function () {
+                  console.log("remove function start");
+                  $(this).parents("tr").remove();
+                });
+              });
+              $("#addRow").click(function (e) {
+                e.preventDefault();
+                // tableの行数取得
+                var id = $(".table tbody").children().length + 1;
+                console.log(`明細行ID=${id}`);
+                var html = `<tr><td><input id="detail${id}" name="detail${id}" class="detail${id} form-control datepicker" type="text" onclick="(function(){$('#detail${id}').datepicker(); $('#detail${id}').datepicker('show');})()" /></td><td><input id="ItemDetail${id}" name="detail${id}"  class="detail${id} form-control" type="text" /></td><td><input id="quantityDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><input id="priceDetail${id}" name="detail${id}"  class="detail${id} form-control" type="number" /></td><td><select id="taxrate${id}" class="detail${id} form-control form-control-md" name="taxrate">
+                                  <option value="10%">10%</option>
+                                  <option value="8%">8%</option>
+                                  <option value="それ以外">非課税・不課税</option>
+                                </select><td><button class="remove">-</button></td></tr>`;
+                $("tbody").append(html);
+              });
 
-    $(function() {
-      console.log("ログイン用ajax起動");
-      $('#loginForm').submit(function(event) {
-        event.preventDefault();
-        $.ajax({
-          type: 'POST',
-          url: '/login',
-          data: $('#loginForm').serialize(),
-          success: function(response) {
-            // ログイン成功時の処理
-            $('#login_button').modal('hide');
-            location.reload();
-            console.log("ログイン成功");
-            console.dir(response);
-          },
-          error: function(response) {
-            // ログイン失敗時の処理
-            $('#loginError').removeClass('d-none');
-            console.log("ログイン失敗");
-          }
-        });
-      });
-    });
+            $(function() {
+              console.log("ログイン用ajax起動");
+              $('#loginForm').submit(function(event) {
+                event.preventDefault();
+                $.ajax({
+                  type: 'POST',
+                  url: '/login',
+                  data: $('#loginForm').serialize(),
+                  success: function(response) {
+                    // ログイン成功時の処理
+                    $('#login_button').modal('hide');
+                    location.reload();
+                    console.log("ログイン成功");
+                    console.dir(response);
+                  },
+                  error: function(response) {
+                    // ログイン失敗時の処理
+                    $('#loginError').removeClass('d-none');
+                    console.log("ログイン失敗");
+                  }
+                });
+              });
+            });
+
+          /** jppintの欄をクリックするとXMLがコピーされる実装 **/
+    function copyText() {
+      const element = document.getElementById('jppint');
+      let range = document.createRange();
+      range.selectNodeContents(element);
+      let selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand('copy');
+      const alertElement = document.createElement('div');
+      alertElement.classList.add('alert', 'alert-success', 'position-fixed', 'end-0', 'me-3');
+      alertElement.setAttribute('role', 'alert');
+      alertElement.innerText = 'コピーしました。';
+      document.getElementById('alert-container').appendChild(alertElement);
+      setTimeout(() => {
+        alertElement.remove();
+      }, 3000);
+    }
   </script>
   {% endblock %}
 </div>
