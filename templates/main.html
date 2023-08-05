@@ -441,6 +441,10 @@
                 JSON.parse(JSON.stringify(data)).encoded_string +
                 '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
 
+            formdata = JSON.parse(formdata);
+            formdata.encoded_string = JSON.parse(JSON.stringify(data)).encoded_string;
+            formdata = JSON.stringify(formdata);
+
             console.log('xml/showへのアクセスはここから');
             return fetch("/xml/show", {
               method: "POST",

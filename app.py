@@ -149,7 +149,7 @@ def callfromajax():
     if request.method == "POST":
         app.logger.warning("---/call_from_ajax---")
         # encoded_string = ""
-        global encoded_string
+        # encoded_string
         global filename
         req = request.get_json()
         app.logger.warning("fileSpecNo: " + req["fileSpecNo"])
@@ -325,6 +325,7 @@ def xml_show():
     """
     req = request.get_json()
     taxAmount = 0
+    encoded_string = req["encoded_string"]
     invoiceNo = req["invoiceNo"]
     issueDate = req["issueDate"]
     issuer = req["issuer"]
