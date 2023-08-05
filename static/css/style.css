@@ -163,7 +163,7 @@ body {
     height: 120vh;
     overflow-wrap: break-word;
     padding: 1rem;
-    overflow-y: scroll;
+    overflow: overlay;
 }
 
 /* デフォルトでは非表示 */
