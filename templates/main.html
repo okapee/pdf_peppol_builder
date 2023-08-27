@@ -235,64 +235,13 @@
             <!-- モーダルを開くボタン -->
             <button
               type="button"
+              id="bank_easy_input"
               class="btn btn-primary mb-3"
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
             >
               振込先コードを簡易入力する
             </button>
-
-            <!-- モーダル -->
-            <div
-              class="modal fade"
-              id="exampleModal"
-              tabindex="-1"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">フォーム</h5>
-                    <button
-                      type="button"
-                      class="btn-close"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div class="modal-body">
-                    <form>
-                      <div class="mb-3">
-                        <label for="bank-name" class="form-label">銀行名</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="bank-name"
-                        />
-                      </div>
-                      <!-- 他のフォーム要素... -->
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      閉じる
-                    </button>
-                    <button
-                      type="button"
-                      class="btn btn-primary"
-                      onclick="saveForm()"
-                    >
-                      保存する
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <div class="form-group mb-3">
               <label for="bank" class="form-label">振込先銀行名：</label>
@@ -388,6 +337,56 @@
           <!--旧Amazonアフィ-->
         </form>
       </div>
+
+      <!-- モーダル -->
+
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+        style="z-index: 1050"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">フォーム</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="bank-name" class="form-label">銀行名</label>
+                  <input type="text" class="form-control" id="bank-name" />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                閉じる
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                onclick="saveForm()"
+              >
+                保存する
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="col-lg-7">
         <div id="result" class="border border-2">
           ここに生成されたPDFが表示されます。
@@ -425,7 +424,6 @@
                             // 明細の値取得 $(".table tbody").children().lengthで明細行数を取得
                             row_num = $(".table tbody").children().length;
                             console.log(`row_num: ${row_num}`);
-
                             var detailList = [];
                             for (let i = 1; i <= row_num; i++) {
                               console.log(`loop${i}`);
@@ -524,48 +522,6 @@
                               }).catch(function (error) {
                                 console.log("errorの中");
                               });
-
-                            /**
-                              $.when(
-                                $.ajax({
-                                  type: "POST",
-                                  url: "/call_from_ajax",
-                                  contentType: "application/json; charset=utf-8",
-                                  data: formdata
-                                }),
-                                $.ajax({
-                                  type: "POST",
-                                  url: "/xml/show",
-                                  contentType: "application/json; charset=utf-8",
-                                  data: formdata
-                                })
-                              )
-                                  .done(function (received_data, xml_data) {
-                                      // 戻ってきたのはJSON（文字列）
-                                      var dict = JSON.parse(received_data[0]);
-                                      var encoded_string = dict["encoded_string"];
-                                      console.log("encoded_string: " + encoded_string);
-
-                                      // PDFを表示
-                                      $("#result").removeClass("border border-2");
-                                      $("#result").html(
-                                          '<embed type="application/pdf" width="100%" height="100%" src="data:application/pdf;base64,' +
-                                          encoded_string +
-                                          '"><a href="{{url_for('pdfdownload')}}">PDFをダウンロード</a>');
-
-                                      var xml = xml_data[0];
-                                      const parser = new DOMParser();
-                                      const dom = parser.parseFromString(xml, "application/xml");
-                                      // ルート要素の名前またはエラーメッセージを出力します
-                                      console.log(dom.documentElement.nodeName == "parsererror" ? "パース中にエラー発生" : dom.documentElement.nodeName);
-                                      const serializer = new XMLSerializer();
-                                      const xmlStr = serializer.serializeToString(xml);
-                                      $("#jppint").text(xmlStr);
-                                  })
-                                  .fail(function () {
-                                      console.log("失敗");
-                                  });
-                                  **/
                           });
 
                           $(".datepicker").datepicker({
@@ -637,7 +593,6 @@
                   }, 3000);
                 }
 
-
             function saveForm() {
               // モーダル内のフォーム要素を取得
               //const form = document.querySelector("#exampleModal form");
@@ -657,7 +612,8 @@
             $('.modal-backdrop').remove();
           });
         });
-        $(function() {
+
+       $(function() {
       // モーダルを開く前に、body要素にoverflow:hiddenスタイルを適用
       $('#exampleModal').on('show.bs.modal', function() {
         $('body').css('overflow', 'hidden');
