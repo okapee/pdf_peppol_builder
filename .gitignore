@@ -6,3 +6,4 @@ sample.json
 
 # 特定のフォルダを無視する
 tmp/
+.~lock.branch.csv#

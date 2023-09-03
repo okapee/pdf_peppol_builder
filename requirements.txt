@@ -48,3 +48,4 @@ Werkzeug==2.0.0
 wheel==0.38.4
 zipp==3.11.0
 gunicorn
+zengin_code
